@@ -10,8 +10,8 @@ import (
 
 var data *os.File
 var Look byte
-var Keywords = []string { "IF", "ELSE", "ENDIF", "WHILE", "ENDWHILE", "END", "VAR", "CLS", "PRINT", "LOCATE" }
-var Tokens = []byte { 'x', 'i', 'l', 'e', 'w', 'e', 'e', 'v', 'c', 'p', 'o' }
+var Keywords = []string { "IF", "ELSE",  "WHILE", "END", "VAR", "CLS", "PRINT", "LOCATE" }
+var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'v', 'c', 'p', 'o' }
 var Token byte
 var Value string
 var LabelCount = 0
@@ -55,11 +55,13 @@ func Read() byte {
 
 func GetChar() {
 	Look = Read()
+	/* Debug: show basic lines in comments
 	fmt.Fprintf(Line, "%c", Look)
 	if Look == '\n' {
 		fmt.Printf("; %s", Line)
 		Line = bytes.NewBufferString("")
 	}
+	*/
 }
 
 func GetSymbol(s string) Symbol {
@@ -285,10 +287,10 @@ func PopMul() {
 
 func PopDiv() {
 	StackDepth--
-	EmitLine("SET X, POP")
-	EmitLine("DIV X, A")
-	EmitLine("SET A, X")
-	EmitLine("SET X, 0")
+	EmitLine("SET B, POP")
+	EmitLine("DIV B, A")
+	EmitLine("SET A, B")
+	EmitLine("SET B, 0")
 }
 
 func PopAnd() {
@@ -322,12 +324,12 @@ func SetNotEqual() {
 }
 
 func SetGreater() {
-	EmitLine("IFG A, B")
+	EmitLine("IFG B, A")
 	EmitLine("SET A, 0")
 }
 
 func SetLess() {
-	EmitLine("IFG B, A")
+	EmitLine("IFG A, B")
 	EmitLine("SET A, 0")
 }
 
@@ -626,7 +628,8 @@ func While() {
 	BoolExpression()
 	BranchFalse(l2)
 	Block()
-	MatchString("ENDWHILE")
+	MatchString("END")
+	MatchString("WHILE")
 	Branch(l1)
 	PostLabel(l2)
 }
@@ -660,10 +663,10 @@ func Loc() {
 }
 
 func FuncPrint() {
-	PostLabel("print_num")
+	PostLabel("printnum")
 	Push()
 	EmitLine("SET I, 0") // Loop counter
-	PostLabel("pnloop1") // Loop: divide A by 10 until 0 is left
+	PostLabel("pndiv") // Loop: divide A by 10 until 0 is left
 	EmitLine("SET B, A") // Store A (number) for later
 	EmitLine("MOD A, 0xa") // Get remainder from division by 10
 	EmitLine("ADD A, 0x30") // Add 0x30 to the remainder to get ASCII code
@@ -672,9 +675,9 @@ func FuncPrint() {
 	EmitLine("DIV A, 0xa") // Divide the number by 10
 	EmitLine("ADD I, 1") // Increment loop counter
 	EmitLine("IFN A, 0") // A > 10: jump to :pnloop1
-	EmitLine("SET PC, pnloop1")
+	EmitLine("SET PC, pndiv")
 
-	PostLabel("pnloop2") // Loop: print character by character
+	PostLabel("pnprint") // Loop: print character by character
 	EmitLine("SET A, POP") // Get digit from stack
 	EmitLine("SET B, X") // Get current cursor position
 	EmitLine("ADD B, 0x8000") // Add video mem address
@@ -687,7 +690,7 @@ func FuncPrint() {
 	PostLabel("pnline")
 	EmitLine("SUB I, 1") // Decrement loop counter
 	EmitLine("IFN I, 0")
-	EmitLine("SET PC, pnloop2") // Jump back to :pnloop2 if there are more chars
+	EmitLine("SET PC, pnprint") // Jump back to :pnloop2 if there are more chars
 	EmitLine("SET A, POP")
 	Ret()
 }
@@ -695,7 +698,7 @@ func FuncPrint() {
 func Print() {
 	Next()
 	BoolExpression()
-	EmitLine("JSR print_num")
+	EmitLine("JSR printnum")
 }
 
 func Block() {
