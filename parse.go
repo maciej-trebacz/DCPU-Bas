@@ -655,11 +655,15 @@ func Cls() {
 func Loc() {
 	Next()
 	BoolExpression()
+	EmitLine("SUB A, 1")
+	EmitLine("SET PUSH, 0x20")
+	EmitLine("MUL A, POP")
 	EmitLine("SET X, A")
 	if Token == ',' {
 		Next()
 		BoolExpression()
-		EmitLine("SET Y, A")
+		EmitLine("SUB A, 1")
+		EmitLine("ADD X, A")
 	}
 }
 
@@ -684,10 +688,9 @@ func FuncPrint() {
 	EmitLine("ADD B, 0x8000") // Add video mem address
 	EmitLine("SET [B], A") // Set video memory byte to show char
 	EmitLine("ADD X, 1") // Increment cursor position
-	EmitLine("IFN X, 0x20") // Check if we should do next line (X > 32)
+	EmitLine("IFN X, 0x160") // Check if we should do next line (X > 32)
 	EmitLine("SET PC, pnline")
-	EmitLine("ADD Y, 1") // Next line
-	EmitLine("SET X, 0") // Row = 0
+	EmitLine("SET X, 0") // First row, first column
 	PostLabel("pnline")
 	EmitLine("SUB I, 1") // Decrement loop counter
 	EmitLine("IFN I, 0")
