@@ -1,7 +1,7 @@
 # DCPU-Bas
 
-DCPU-Bas is a simple QuickBASIC-like compiler for virtual DCPU in Notch's [http://www.0x10c.com](0x10c Game), written in [http://golang.org](Go).
-Compiler structure and engine is heavily inspired by [compilers.iecc.com/crenshaw/](Let's Build a Compiler, by Jack Crenshaw).
+DCPU-Bas is a simple QuickBASIC-like compiler for virtual DCPU in Notch's [0x10c Game](http://www.0x10c.com), written in [Go language](http://golang.org).
+Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by Jack Crenshaw](http://compilers.iecc.com/crenshaw/).
 
 ## Features
 
@@ -108,3 +108,7 @@ a big or small number.
 	PRINT num
 
 	END
+
+## Licence
+
+This code is licenced on the terms of the [http://www.opensource.org/licenses/mit-license.php](MIT Licence).
