@@ -72,7 +72,7 @@ Program MUST end with an END statement.
 	END
 
 This program declares three variables, then does some math, and finally prints the result (which is 32) to video memory.
-You can test the program with [Mappum's emulator](http://mappum.github.com/DCPU-16/).
+You can test the program with some web based emulators: [Donzanoid's real-time editor](http://dwilliamson.github.com/) or [Mappum's emulator](http://mappum.github.com/DCPU-16/).
 Output of the program isn't pretty, but hey, it works!
 
 ## More complex sample program
