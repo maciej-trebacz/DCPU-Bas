@@ -367,7 +367,8 @@ func Prolog() {
 }
 
 func Epilog() {
-	EmitLine("BRK")
+	PostLabel("crash")
+	EmitLine("SET PC, crash")
 }
 
 func Op_Add() {
@@ -591,7 +592,7 @@ func Assignment() {
 }
 
 func NewLabel() string {
-	label := fmt.Sprintf("l%d", LabelCount)
+	label := fmt.Sprintf("l%c", LabelCount + 97)
 	LabelCount += 1
 	return label
 }
