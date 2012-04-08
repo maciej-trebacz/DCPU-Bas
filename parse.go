@@ -319,8 +319,8 @@ func SetEqual() {
 }
 
 func SetNotEqual() {
-	EmitLine("IFN A, B")
-	EmitLine("SET A, 0")
+	EmitLine("IFE A, B")
+	EmitLine("SET A, 1")
 }
 
 func SetGreater() {
