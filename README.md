@@ -7,9 +7,55 @@ Compiler structure and engine is heavily inspired by [compilers.iecc.com/crensha
 
 * Arithmetics: + - * /
 * Boolean operators: & ~ !
+* Relational operators: == <> < > <= >=
 * Control structures: IF, WHILE
 * Variables (integer only for now)
 * Statements: CLS, LOCATE, PRINT
+
+### IF
+
+Usage:
+	IF <condition> THEN
+		...
+	[ELSE
+		...]
+	END IF
+
+Conditional statement.
+
+### WHILE
+
+Usage:
+	WHILE <condition>
+		...
+	END WHILE
+
+Loops through a code block when condition is met.
+
+### CLS
+
+Usage:
+	CLS
+
+Clears whole 32x16 screen (video buffer at 0x8000)
+
+### PRINT
+
+Usage:
+	PRINT <expression>
+
+Prints <expression> at current screen cursor location
+
+### LOCATE
+
+Usage:
+	LOCATE <Y>[, <X>]
+
+Sets current cursor location to <X>, <Y>. Set's only <Y> if <X> is not provided.
+
+### END
+
+Program MUST end with an END statement.
 
 ## Sample Program
 
