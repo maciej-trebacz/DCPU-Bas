@@ -111,4 +111,4 @@ a big or small number.
 
 ## Licence
 
-This code is licenced on the terms of the [http://www.opensource.org/licenses/mit-license.php](MIT Licence).
+This code is licenced on the terms of the [MIT Licence](http://www.opensource.org/licenses/mit-license.php).
