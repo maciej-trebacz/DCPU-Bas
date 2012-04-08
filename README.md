@@ -26,7 +26,7 @@ Executes a code block if _condition_ is met. Optional ELSE block executed if _co
 ### WHILE
 
 Usage:
-	WHILE condition
+	WHILE _condition_
 		...
 	END WHILE
 
@@ -49,9 +49,9 @@ Prints _expression_ at current screen cursor location
 ### LOCATE
 
 Usage:
-	LOCATE Y[, X]
+	LOCATE _Y_[, _X_]
 
-Sets current cursor location to X, Y. Set's only Y if X is not provided.
+Sets current cursor location to _X_, _Y_. Set's only _Y_ if _X_ is not provided.
 
 ### END
 
