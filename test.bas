@@ -11,7 +11,7 @@ ELSE
 	num = 9
 END IF
 
-WHILE pad <> 0
+WHILE pad > 1
 	pad = pad - 1
 	test = test * 10
 END WHILE

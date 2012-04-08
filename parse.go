@@ -311,26 +311,27 @@ func PopXor() {
 func PopCompare() {
 	StackDepth--
 	EmitLine("SET B, POP")
+	EmitLine("SET C, 1")
 }
 
 func SetEqual() {
 	EmitLine("IFE A, B")
-	EmitLine("SET A, 0")
+	EmitLine("SET C, 0")
 }
 
 func SetNotEqual() {
-	EmitLine("IFE A, B")
-	EmitLine("SET A, 1")
+	EmitLine("IFN A, B")
+	EmitLine("SET C, 0")
 }
 
 func SetGreater() {
 	EmitLine("IFG B, A")
-	EmitLine("SET A, 0")
+	EmitLine("SET C, 0")
 }
 
 func SetLess() {
 	EmitLine("IFG A, B")
-	EmitLine("SET A, 0")
+	EmitLine("SET C, 0")
 }
 
 func SetGreaterOrEqual() {
@@ -356,7 +357,7 @@ func Branch(s string) {
 }
 
 func BranchFalse(s string) {
-	EmitLine("IFN A, 0")
+	EmitLine("IFN C, 0")
 	Branch(s)
 }
 
