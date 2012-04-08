@@ -15,22 +15,22 @@ Compiler structure and engine is heavily inspired by [compilers.iecc.com/crensha
 ### IF
 
 Usage:
-	IF <condition> THEN
+	IF _condition_ THEN
 		...
 	[ELSE
 		...]
 	END IF
 
-Conditional statement.
+Executes a code block if _condition_ is met. Optional ELSE block executed if _condition_ is NOT met.
 
 ### WHILE
 
 Usage:
-	WHILE <condition>
+	WHILE condition
 		...
 	END WHILE
 
-Loops through a code block when condition is met.
+Loops through a code block when _condition_ is met.
 
 ### CLS
 
@@ -42,16 +42,16 @@ Clears whole 32x16 screen (video buffer at 0x8000)
 ### PRINT
 
 Usage:
-	PRINT <expression>
+	PRINT _expression_
 
-Prints <expression> at current screen cursor location
+Prints _expression_ at current screen cursor location
 
 ### LOCATE
 
 Usage:
-	LOCATE <Y>[, <X>]
+	LOCATE Y[, X]
 
-Sets current cursor location to <X>, <Y>. Set's only <Y> if <X> is not provided.
+Sets current cursor location to X, Y. Set's only Y if X is not provided.
 
 ### END
 
