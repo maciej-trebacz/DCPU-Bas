@@ -12,84 +12,52 @@ DCPU-Bas is a simple QuickBASIC-like compiler for virtual DCPU in Notch's [http:
 
 ## Sample Program
 
-	VAR A, B, C
+	VAR A, B, C, D
 	A = 5
 	B = 20+A*10
 	C = B - 6
+	D = C
+	WHILE D > 0
+		D = D / 10
+		PRINT 0
+	END WHILE
 	PRINT C / 2
 	END
 
 This program declares three variables, then does some math, and finally prints the result (which is 32) to video memory.
 You can test the program with [http://mappum.github.com/DCPU-16/](Mappum's emulator).
+Output of the program isn't pretty, but hey, it works!
 
-### Output of sample program
+## More complex sample program
 
-		SET PUSH, A
-		SET PUSH, A
-	; VAR A, B, C
-		SET PUSH, A
-		SET PC, begin
-		:print_num
-		SET PUSH, A
-		SET I, 0
-		:pnloop1
-		SET B, A
-		MOD A, 0xa
-		ADD A, 0x30
-		SET PUSH, A
-		SET A, B
-		DIV A, 0xa
-		ADD I, 1
-		IFN A, 0
-		SET PC, pnloop1
-		:pnloop2
-		SET A, POP
-		SET B, X
-		ADD B, 0x8000
-		SET [B], A
-		ADD X, 1
-		IFN X, 0x20
-		SET PC, pnline
-		ADD Y, 1
-		SET X, 0
-		:pnline
-		SUB I, 1
-		IFN I, 0
-		SET PC, pnloop2
-		SET A, POP
-		SET PC, POP
-		:begin
-	; A = 5
-		SET A, 0x5
-		SET [0xffff], A
-		SET A, 0x14
-		SET PUSH, A
-		SET A, [0xffff]
-		SET PUSH, A
-	; B = 20+A*10
-		SET A, 0xa
-		MUL A, POP
-		ADD A, POP
-		SET [0xfffe], A
-		SET A, [0xfffe]
-		SET PUSH, A
-	; C = B - 6
-		SET A, 0x6
-		SUB A, POP
-		SET PUSH, A
-		SET A, 0
-		SUB A, POP
-		SET [0xfffd], A
-		SET A, [0xfffd]
-		SET PUSH, A
-	; PRINT C / 2
-		SET A, 0x2
-	; END
-		SET X, POP
-		DIV X, A
-		SET A, X
-		SET X, 0
-		JSR print_num
-		BRK
+This little program gets a number, then pads it with 0's. There's a variable 'big' that let's you choose if you want
+a big or small number.
 
-The output isn't pretty and probably performs badly. But hey, it works!
+	VAR num, pad, test, big
+
+	big = 1
+
+	pad = 4
+	test = 1
+
+	IF big == 1 THEN
+		num = 32
+	ELSE
+		num = 9
+	END IF
+
+	WHILE pad <> 0
+		pad = pad - 1
+		test = test * 10
+	END WHILE
+
+	pad = num
+
+	WHILE pad < test
+		pad = pad * 10
+		PRINT 0
+	END WHILE
+
+	PRINT num
+
+	END
