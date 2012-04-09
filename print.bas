@@ -1,0 +1,10 @@
+DIM A, B
+
+A = "HELLO"
+B = "WORLD"
+
+PRINT A; " "; B; "! "
+PRINT
+PRINT "SUCESS!"
+
+END

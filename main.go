@@ -1,3 +1,8 @@
+/****************************************
+  DCPU-Bas - QuickBasic DCPU-16 compiler
+      by M4v3R (maciej@trebacz.org)
+ ****************************************/
+
 package main
 
 import "os"

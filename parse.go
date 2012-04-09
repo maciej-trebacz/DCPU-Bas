@@ -1,3 +1,10 @@
+/****************************************
+  DCPU-Bas - QuickBasic DCPU-16 compiler
+      by M4v3R (maciej@trebacz.org)
+
+            Main code parser
+ ****************************************/
+
 package main
 
 import (
@@ -5,16 +12,16 @@ import (
 	"os"
 	"bytes"
 	"strings"
-	"strconv"
 )
 
 var data *os.File
-var Look byte
+var Look, Prev byte
 var Keywords = []string { "IF", "ELSE",  "WHILE", "END", "DIM", "CLS", "PRINT", "LOCATE", "REM" }
 var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o', 'r' }
 var Token byte
 var Value string
 var LabelCount = 0
+var ConstCount = 0
 var StackDepth = 0
 var Line = bytes.NewBufferString("")
 
@@ -28,7 +35,7 @@ var Symbols = make([]Symbol, 100)
 
 func Abort(errorString string) {
 	Error(errorString)
-	fmt.Printf("\nCurrent token type: %c, value: '%s'\n\n", Token, Value)
+	fmt.Printf("\nCurrent token type: %c, look: %c, value: '%s'\n\n", Token, Look, Value)
 	panic("")
 }
 
@@ -54,6 +61,7 @@ func Read() byte {
 }
 
 func GetChar() {
+	Prev = Look
 	Look = Read()
 	/* Debug: show basic lines in comments
 	fmt.Fprintf(Line, "%c", Look)
@@ -230,148 +238,31 @@ func GetNum() {
 	Value = string(value.Bytes())
 }
 
+func GetString() {
+	SkipWhite()
+	Value = ""
+	value := bytes.NewBufferString("")
+	if Look != '"' {
+		Expected("String Constant")
+	}
+	GetChar()
+	for {
+		fmt.Fprintf(value, "%c", Look)
+		GetChar()
+		if Look == '"' {
+			break
+		}
+	}
+	GetChar()
+	Token = '$'
+	Value = string(value.Bytes())
+}
+
 func GetOp() {
 	SkipWhite()
 	Token = Look
 	Value = string(Look)
 	GetChar()
-}
-
-func Negate() {
-	Push()
-	EmitLine("SET A, 0")
-	EmitLine("SUB A, POP")
-}
-
-func Clear() {
-	EmitLine("SET A, 0")
-}
-
-func Not() {
-	EmitLine("XOR A, -1")
-}
-
-func LoadConst(s string) {
-	val, _ := strconv.Atoi(s)
-	EmitLine(fmt.Sprintf("SET A, %#x", val))
-}
-
-func LoadVar(s string) {
-	if !InTable(s) {
-		Undefined(s)
-	}
-	symbol := Symbols[Locate(GetSymbol(s))]
-	EmitLine(fmt.Sprintf("SET A, [%#x]", (0xffff + symbol.l)))
-}
-
-func Push() {
-	StackDepth++
-	EmitLine("SET PUSH, A")
-}
-
-func PopAdd() {
-	StackDepth--
-	EmitLine("ADD A, POP")
-}
-
-func PopSub() {
-	StackDepth--
-	EmitLine("SUB A, POP")
-	Negate()
-}
-
-func PopMul() {
-	StackDepth--
-	EmitLine("MUL A, POP")
-}
-
-func PopDiv() {
-	StackDepth--
-	EmitLine("SET B, POP")
-	EmitLine("DIV B, A")
-	EmitLine("SET A, B")
-	EmitLine("SET B, 0")
-}
-
-func PopAnd() {
-	StackDepth--
-	EmitLine("AND A, POP")
-}
-
-func PopOr() {
-	StackDepth--
-	EmitLine("BOR A, POP")
-}
-
-func PopXor() {
-	StackDepth--
-	EmitLine("XOR A, POP")
-}
-
-func PopCompare() {
-	StackDepth--
-	EmitLine("SET B, POP")
-	EmitLine("SET C, 1")
-}
-
-func SetEqual() {
-	EmitLine("IFE A, B")
-	EmitLine("SET C, 0")
-}
-
-func SetNotEqual() {
-	EmitLine("IFN A, B")
-	EmitLine("SET C, 0")
-}
-
-func SetGreater() {
-	EmitLine("IFG B, A")
-	EmitLine("SET C, 0")
-}
-
-func SetLess() {
-	EmitLine("IFG A, B")
-	EmitLine("SET C, 0")
-}
-
-func SetGreaterOrEqual() {
-	SetGreater()
-	SetEqual()
-}
-
-func SetLessOrEqual() {
-	SetLess()
-	SetEqual()
-}
-
-func Store(s string) {
-	if !InTable(s) {
-		Undefined(s)
-	}
-	symbol := Symbols[Locate(GetSymbol(s))]
-	EmitLine(fmt.Sprintf("SET [%#x], A", (0xffff + symbol.l)))
-}
-
-func Branch(s string) {
-	EmitLine(fmt.Sprintf("SET PC, %s", s))
-}
-
-func BranchFalse(s string) {
-	EmitLine("IFN C, 0")
-	Branch(s)
-}
-
-func Prolog() {
-	EmitLine("SET PC, begin")
-	EmitLine("")
-	FuncPrint()
-	EmitLine("")
-	PostLabel("begin")
-}
-
-func Epilog() {
-	PostLabel("crash")
-	EmitLine("SET PC, crash")
 }
 
 func Op_Add() {
@@ -514,6 +405,8 @@ func Factor() {
 			LoadVar(Value)
 		} else if Token == '#' {
 			LoadConst(Value)
+		} else if Token == '$' {
+			LoadConstString(Value)
 		} else {
 			Expected("Math Factor")
 		}
@@ -571,6 +464,8 @@ func Next() {
 		GetName()
 	} else if IsDigit(Look) {
 		GetNum()
+	} else if Look == '"' {
+		GetString()
 	} else {
 		GetOp()
 	}
@@ -591,11 +486,20 @@ func Assignment() {
 	Next()
 	MatchString("=")
 	BoolExpression()
+	if !InTable(name) {
+		Undefined(name)
+	}
 	Store(name)
 }
 
+func NewConst() string {
+	label := fmt.Sprintf("c%d", ConstCount)
+	ConstCount += 1
+	return label
+}
+
 func NewLabel() string {
-	label := fmt.Sprintf("l%c", LabelCount + 97)
+	label := fmt.Sprintf("l%d", LabelCount)
 	LabelCount += 1
 	return label
 }
@@ -638,77 +542,20 @@ func While() {
 	PostLabel(l2)
 }
 
-func Ret() {
-	EmitLine("SET PC, POP")
-}
-
-func Cls() {
-	EmitLine("SET A, 0x200")
-	l := NewLabel()
-	PostLabel(l)
-	EmitLine("SET B, 0x8000")
-	EmitLine("ADD B, A")
-	EmitLine("SET [B], 0")
-	EmitLine("SUB A, 1")
-	BranchFalse(l)
-	EmitLine("SET [0x8000], 0")
-	Next()
-}
-
-func Loc() {
-	Next()
-	BoolExpression()
-	EmitLine("SUB A, 1")
-	EmitLine("SET PUSH, 0x20")
-	EmitLine("MUL A, POP")
-	EmitLine("SET X, A")
-	if Token == ',' {
+func Print() {
+	if Prev != '\n' {
 		Next()
 		BoolExpression()
-		EmitLine("SUB A, 1")
-		EmitLine("ADD X, A")
+		Call("print")
+		for Token == ';' {
+			Next()
+			BoolExpression()
+			Call("print")
+		}
+	} else {
+		Next()
 	}
-}
-
-func FuncPrint() {
-	PostLabel("printchar")
-	EmitLine("SET B, X") // Get current cursor position
-	EmitLine("ADD B, 0x8000") // Add video mem address
-	EmitLine("SET [B], A") // Set video memory byte to show char
-	EmitLine("ADD X, 1") // Increment cursor position
-	EmitLine("IFN X, 0x160") // Check if we should do next line (X > 32)
-	EmitLine("SET PC, pnline")
-	EmitLine("SET X, 0") // First row, first column
-	PostLabel("pnline")
-	Ret()
-
-	PostLabel("printint")
-	EmitLine("SET I, 0") // Loop counter
-	PostLabel("printint1") // Loop: divide A by 10 until 0 is left
-	EmitLine("SET B, A") // Store A (number) for later
-	EmitLine("MOD A, 0xa") // Get remainder from division by 10
-	EmitLine("ADD A, 0x30") // Add 0x30 to the remainder to get ASCII code
-	EmitLine("SET PUSH, A") // Store the remainder (digit) on the stack
-	EmitLine("SET A, B") // Get A (number) back
-	EmitLine("DIV A, 0xa") // Divide the number by 10
-	EmitLine("ADD I, 1") // Increment loop counter
-	EmitLine("IFN A, 0") // A > 10: jump
-	EmitLine("SET PC, printint1")
-	PostLabel("printint2") // Loop: print character by character
-	EmitLine("SET A, POP") // Get digit from stack
-	EmitLine("JSR printchar") // Print character
-	EmitLine("SUB I, 1") // Decrement loop counter
-	EmitLine("IFN I, 0")
-	EmitLine("SET PC, printint2") // Jump back if there are more chars
-	EmitLine("SET A, POP")
-	Ret()
-}
-
-func Print() {
-	Next()
-	BoolExpression()
-
-	EmitLine("JSR printint")
+	Call("printnl")
 }
 
 func Rem() {

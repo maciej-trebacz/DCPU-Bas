@@ -33,6 +33,7 @@ func LoadConst(s string) {
 
 func LoadConstString(s string) {
 	label := NewConst()
+	EmitLine("SET A, 0")
 	EmitLine(fmt.Sprintf(":%s DAT \"%s\", 0", label, s))
 	EmitLine(fmt.Sprintf("SET A, %s", label))
 	EmitLine(fmt.Sprintf("BOR A, 0x8000"))
@@ -131,6 +132,10 @@ func Store(s string) {
 	EmitLine(fmt.Sprintf("SET [%#x], A", (0xffff + symbol.l)))
 }
 
+func Call(s string) {
+	EmitLine(fmt.Sprintf("JSR %s", s))
+}
+
 func Branch(s string) {
 	EmitLine(fmt.Sprintf("SET PC, %s", s))
 }
@@ -141,10 +146,6 @@ func BranchFalse(s string) {
 }
 
 func Prolog() {
-	EmitLine("SET PC, begin")
-	EmitLine("")
-	Lib()
-	EmitLine("")
 	PostLabel("begin")
 }
 
@@ -225,6 +226,12 @@ func Lib() {
 	EmitLine("ADD I, 1") // Increment char index
 	EmitLine("SET PC, printstr1") // Loop
 
+	PostLabel("printnl") // Print new line
+	EmitLine("DIV X, 32")
+	EmitLine("ADD X, 1")
+	EmitLine("MUL X, 32")
+	Ret()
+
 	PostLabel("print")
 	EmitLine("SET B, A") // Check variable type
 	EmitLine("SHR B, 15")
@@ -236,6 +243,10 @@ func Lib() {
 }
 
 func Epilog() {
+	EmitLine("SET PC, crash")
+	EmitLine("")
+	EmitLine("; compiled functions")
+	Lib()
 	PostLabel("crash")
 	EmitLine("SET PC, crash")
 }
