@@ -1,10 +1,43 @@
-DIM CHR, I
+DIM CHR, I, P
 
 CHR = "*"
-I = 0
+I = 1
+P = 0
+
+LOCATE 6, 9
+PRINT "0x10c BASIC FTW!"
 
 LOOP
+	IF I < 33 THEN
+		LOCATE 1, I
+	ELSE
+		IF I < 44 THEN
+			LOCATE 2 + (I - 33), 32
+		ELSE
+			IF I < 75 THEN
+				LOCATE 12, 31 - (I - 44)
+			ELSE
+				LOCATE 11 - (I - 75), 1
+			END IF
+		END IF
+	END IF
+
+	IF I % 3 == P THEN
+		COLOR 14, 0
+	ELSE
+		COLOR 1, 0
+	END IF
+	
+	PRINT CHR
+
 	I = I + 1
+	IF I > 85 THEN
+		I = 0
+		P = P + 1
+		IF P > 2 THEN
+			P = 0
+		END IF
+	END IF
 END LOOP
 
 END

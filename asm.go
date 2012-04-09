@@ -33,7 +33,7 @@ func LoadConst(s string) {
 
 func LoadConstString(s string) {
 	label := NewConst()
-	EmitLine("SET A, 0")
+	EmitLine(fmt.Sprintf("ADD PC, %d", len(s) + 1))
 	EmitLine(fmt.Sprintf(":%s DAT \"%s\", 0", label, s))
 	EmitLine(fmt.Sprintf("SET A, %s", label))
 	EmitLine(fmt.Sprintf("BOR A, 0x8000"))
