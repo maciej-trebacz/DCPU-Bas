@@ -10,7 +10,8 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 * Relational operators: == <> < > <= >=
 * Control structures: IF, LOOP
 * Variables (both integer and string)
-* Statements: CLS, LOCATE, PRINT, COLOR
+* Statements: CLS, LOCATE, PRINT, COLOR, KEY
+* Functions: STR
 
 ### IF
 
@@ -43,8 +44,9 @@ Clears whole 32x16 screen (video buffer at 0x8000)
 
 Usage:
 	PRINT _expression_ [; _expression]
+	PRINT
 
-Prints _expression(s)_ at current screen cursor location, and sets cursor position to next line, row 1 at the end. Multiple expressions can be joined with semi-colon (;). 
+Prints _expression(s)_ at current screen cursor location. Multiple expressions can be joined with semi-colon (;). If no expression is given, it sets cursor to column 1 of next terminal row.
 
 ### LOCATE
 
@@ -55,10 +57,24 @@ Sets current cursor location to _X_, _Y_. Set's only _Y_ if _X_ is not provided.
 
 ### COLOR
 
-Usage
+Usage:
 	COLOR _FOREGROUND_, _BACKGROUND_
 
 Sets current output color to _FOREGROUND_ and _BACKGROUND_. Both these values can be 0 to 15.
+
+### KEY
+
+Usage:
+	KEY 
+
+Used in an expression, it returns character code of last pressed key.
+
+### STR
+
+Usage:
+	STR(_expression_)
+
+Returns an ASCII character from given character code.
 
 ### END
 

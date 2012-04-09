@@ -154,7 +154,7 @@ func BranchFalse(s string) {
 }
 
 func Prolog() {
-	PostLabel("begin")
+	EmitLine("SET Y, 0x7000") // Set color to white
 }
 
 func Ret() {
@@ -201,7 +201,16 @@ func Color() {
 	EmitLine("BOR Y, A")
 }
 
+func Key() {
+	Next()
+}
+
 func Lib() {
+	PostLabel("getkey") // Get key press
+	EmitLine("SET A, [0x9000]")
+	EmitLine("SET [0x9000], 0")
+	Ret()
+
 	PostLabel("printchar") // Print char
 	EmitLine("SET B, X") // Get current cursor position
 	EmitLine("ADD B, 0x8000") // Add video mem address

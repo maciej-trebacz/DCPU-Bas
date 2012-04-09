@@ -407,7 +407,11 @@ func Factor() {
 		Expression()
 		MatchString(")")
 	} else {
-		if Token == 'x' {
+		if Value == "KEY" {
+			Call("getkey")
+		} else if Value == "STR" {
+			FuncStr()
+		} else if Token == 'x' {
 			LoadVar(Value)
 		} else if Token == '#' {
 			LoadConst(Value)
@@ -559,14 +563,15 @@ func Print() {
 		BoolExpression()
 		Call("print")
 		for Token == ';' {
+			Expected("PRINT")
 			Next()
 			BoolExpression()
 			Call("print")
 		}
 	} else {
 		Next()
+		Call("printnl")
 	}
-	Call("printnl")
 }
 
 func Rem() {
