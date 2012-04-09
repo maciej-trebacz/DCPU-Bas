@@ -16,11 +16,12 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 ### IF
 
 Usage:
-```    IF _condition_ THEN  
-        ...  
-    [ELSE  
-        ...]  
-    END IF
+```
+IF _condition_ THEN
+	...
+[ELSE
+	...]
+END IF
 ```
 
 Executes a code block if _condition_ is met. Optional ELSE block executed if _condition_ is NOT met.
@@ -28,9 +29,10 @@ Executes a code block if _condition_ is met. Optional ELSE block executed if _co
 ### LOOP
 
 Usage:
-```    LOOP [WHILE _condition_]  
-        ...  
-    END WHILE
+```
+LOOP [WHILE _condition_]
+	...
+END WHILE
 ```
 
 Loops through a code block. Whe _condition_ is supplied, loops while the _condition_ is met.
@@ -38,7 +40,7 @@ Loops through a code block. Whe _condition_ is supplied, loops while the _condit
 ### CLS
 
 Usage:
-```    CLS
+```CLS
 ```
 
 Clears whole 32x16 screen (video buffer at 0x8000)
@@ -46,8 +48,9 @@ Clears whole 32x16 screen (video buffer at 0x8000)
 ### PRINT
 
 Usage:
-```    PRINT _expression_ [; _expression]  
-    PRINT
+```
+PRINT _expression_ [; _expression]
+PRINT
 ```
 
 Prints _expression(s)_ at current screen cursor location. Multiple expressions can be joined with semi-colon (;). If no expression is given, it sets cursor to column 1 of next terminal row.
@@ -55,7 +58,8 @@ Prints _expression(s)_ at current screen cursor location. Multiple expressions c
 ### LOCATE
 
 Usage:
-```    LOCATE _Y_[, _X_]
+```
+LOCATE _Y_[, _X_]
 ```
 
 Sets current cursor location to _X_, _Y_. Set's only _Y_ if _X_ is not provided.
@@ -63,7 +67,8 @@ Sets current cursor location to _X_, _Y_. Set's only _Y_ if _X_ is not provided.
 ### COLOR
 
 Usage:
-```    COLOR _FOREGROUND_, _BACKGROUND_
+```
+COLOR _FOREGROUND_, _BACKGROUND_
 ```
 
 Sets current output color to _FOREGROUND_ and _BACKGROUND_. Both these values can be 0 to 15.
@@ -71,8 +76,9 @@ Sets current output color to _FOREGROUND_ and _BACKGROUND_. Both these values ca
 ### KEY
 
 Usage:
-```    DIM Code  
-    Code = KEY 
+```
+DIM Code
+Code = KEY 
 ```
 
 Used in an expression, it returns character code of last pressed key.
@@ -80,8 +86,9 @@ Used in an expression, it returns character code of last pressed key.
 ### STR
 
 Usage:
-```    DIM Char  
-    Char = STR(_expression_)
+```
+DIM Char
+Char = STR(_expression_)
 ```
 
 Returns an ASCII character from given character code.
@@ -89,8 +96,9 @@ Returns an ASCII character from given character code.
 ### CHR
 
 Usage:
-```    DIM Code  
-    Code = STR(_expression_)
+```
+DIM Code
+Code = STR(_expression_)
 ```
 
 Returns a character code from first character of an ASCII string (opposite to STR)
@@ -98,15 +106,16 @@ Returns a character code from first character of an ASCII string (opposite to ST
 ### INPUT
 
 Usage:
-```    DIM YourName  
-    YourName = INPUT
+```
+DIM YourName
+YourName = INPUT
 ```
 
 Waits for user to enter a string followed by ENTER key, and returns this string as expression. User input is displayed on the screen.
 
 ### END
 
-Program MUST end with an END statement.
+Program MUST end with an ```END``` statement.
 
 ## Demos
 
