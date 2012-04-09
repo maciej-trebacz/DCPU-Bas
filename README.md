@@ -11,7 +11,7 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 * Control structures: IF, LOOP
 * Variables (both integer and string)
 * Statements: CLS, LOCATE, PRINT, COLOR, KEY
-* Functions: STR
+* Functions: STR, CHR
 
 ### IF
 
