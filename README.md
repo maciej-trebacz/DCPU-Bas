@@ -76,6 +76,13 @@ Usage:
 
 Returns an ASCII character from given character code.
 
+### CHR
+
+Usage:
+	STR(_expression_)
+
+Returns a character code from first character of an ASCII string (opposite to STR)
+
 ### END
 
 Program MUST end with an END statement.

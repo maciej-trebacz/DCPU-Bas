@@ -1,0 +1,10 @@
+DIM K
+
+LOOP
+	K = KEY
+	IF K > 0 THEN
+		PRINT STR(K)
+	END IF
+END LOOP
+
+END

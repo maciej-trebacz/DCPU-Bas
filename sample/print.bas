@@ -6,5 +6,7 @@ B = "WORLD"
 PRINT A; " "; B; "! "
 PRINT
 PRINT "SUCESS!"
+PRINT
+PRINT CHR(A) - 30
 
 END

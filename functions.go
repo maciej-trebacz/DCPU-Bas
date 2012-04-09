@@ -24,3 +24,12 @@ func FuncStr() {
 	EmitLine(fmt.Sprintf("SET A, %s", label))
 	EmitLine("BOR A, 0x8000")
 }
+
+func FuncChr() {
+	Next()
+	MatchString("(")
+	BoolExpression()
+	EmitLine("AND A, 0x7fff")
+	EmitLine("SET PUSH, [A]")
+	EmitLine("SET A, POP")
+}

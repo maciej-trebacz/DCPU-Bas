@@ -411,6 +411,8 @@ func Factor() {
 			Call("getkey")
 		} else if Value == "STR" {
 			FuncStr()
+		} else if Value == "CHR" {
+			FuncChr()
 		} else if Token == 'x' {
 			LoadVar(Value)
 		} else if Token == '#' {
@@ -563,7 +565,6 @@ func Print() {
 		BoolExpression()
 		Call("print")
 		for Token == ';' {
-			Expected("PRINT")
 			Next()
 			BoolExpression()
 			Call("print")
