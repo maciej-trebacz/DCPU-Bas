@@ -10,8 +10,8 @@ import (
 
 var data *os.File
 var Look byte
-var Keywords = []string { "IF", "ELSE",  "WHILE", "END", "DIM", "CLS", "PRINT", "LOCATE" }
-var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o' }
+var Keywords = []string { "IF", "ELSE",  "WHILE", "END", "DIM", "CLS", "PRINT", "LOCATE", "REM" }
+var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o', 'r' }
 var Token byte
 var Value string
 var LabelCount = 0
@@ -136,7 +136,7 @@ func AddVar(n string, t rune) {
 	Symbols[StackDepth].n = n
 	Symbols[StackDepth].t = t
 	Symbols[StackDepth].l = -StackDepth
-	Push()
+	StackDepth++
 }
 
 func IsAlpha(c byte) bool {
@@ -363,7 +363,9 @@ func BranchFalse(s string) {
 
 func Prolog() {
 	EmitLine("SET PC, begin")
+	EmitLine("")
 	FuncPrint()
+	EmitLine("")
 	PostLabel("begin")
 }
 
@@ -669,22 +671,7 @@ func Loc() {
 }
 
 func FuncPrint() {
-	PostLabel("printnum")
-	Push()
-	EmitLine("SET I, 0") // Loop counter
-	PostLabel("pndiv") // Loop: divide A by 10 until 0 is left
-	EmitLine("SET B, A") // Store A (number) for later
-	EmitLine("MOD A, 0xa") // Get remainder from division by 10
-	EmitLine("ADD A, 0x30") // Add 0x30 to the remainder to get ASCII code
-	EmitLine("SET PUSH, A") // Store the remainder (digit) on the stack
-	EmitLine("SET A, B") // Get A (number) back
-	EmitLine("DIV A, 0xa") // Divide the number by 10
-	EmitLine("ADD I, 1") // Increment loop counter
-	EmitLine("IFN A, 0") // A > 10: jump to :pnloop1
-	EmitLine("SET PC, pndiv")
-
-	PostLabel("pnprint") // Loop: print character by character
-	EmitLine("SET A, POP") // Get digit from stack
+	PostLabel("printchar")
 	EmitLine("SET B, X") // Get current cursor position
 	EmitLine("ADD B, 0x8000") // Add video mem address
 	EmitLine("SET [B], A") // Set video memory byte to show char
@@ -693,9 +680,26 @@ func FuncPrint() {
 	EmitLine("SET PC, pnline")
 	EmitLine("SET X, 0") // First row, first column
 	PostLabel("pnline")
+	Ret()
+
+	PostLabel("printint")
+	EmitLine("SET I, 0") // Loop counter
+	PostLabel("printint1") // Loop: divide A by 10 until 0 is left
+	EmitLine("SET B, A") // Store A (number) for later
+	EmitLine("MOD A, 0xa") // Get remainder from division by 10
+	EmitLine("ADD A, 0x30") // Add 0x30 to the remainder to get ASCII code
+	EmitLine("SET PUSH, A") // Store the remainder (digit) on the stack
+	EmitLine("SET A, B") // Get A (number) back
+	EmitLine("DIV A, 0xa") // Divide the number by 10
+	EmitLine("ADD I, 1") // Increment loop counter
+	EmitLine("IFN A, 0") // A > 10: jump
+	EmitLine("SET PC, printint1")
+	PostLabel("printint2") // Loop: print character by character
+	EmitLine("SET A, POP") // Get digit from stack
+	EmitLine("JSR printchar") // Print character
 	EmitLine("SUB I, 1") // Decrement loop counter
 	EmitLine("IFN I, 0")
-	EmitLine("SET PC, pnprint") // Jump back to :pnloop2 if there are more chars
+	EmitLine("SET PC, printint2") // Jump back if there are more chars
 	EmitLine("SET A, POP")
 	Ret()
 }
@@ -703,7 +707,16 @@ func FuncPrint() {
 func Print() {
 	Next()
 	BoolExpression()
-	EmitLine("JSR printnum")
+
+	EmitLine("JSR printint")
+}
+
+func Rem() {
+	Next()
+	for Look != '\n' {
+		GetChar()
+	}
+	Next()
 }
 
 func Block() {
@@ -720,6 +733,8 @@ func Block() {
 			Loc()
 		case 'p':
 			Print()
+		case 'r':
+			Rem()
 		default:
 			Assignment()
 		}
@@ -739,11 +754,18 @@ func Alloc() {
 
 func Declarations() {
 	Scan()
+	currentStack := StackDepth
 	for Token == 'd' {
 		Alloc()
 		for Token == ',' {
 			Alloc()
 		}
+	}
+
+	// Allocate space on the stack for the vars
+	i := StackDepth - currentStack
+	if i > 0 {
+		EmitLine(fmt.Sprintf("SUB SP, %d ; Alloc space on stack", i))
 	}
 }
 
