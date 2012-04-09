@@ -1,0 +1,11 @@
+DIM a
+
+a = 8
+
+LOCATE 1, 1
+PRINT a
+
+LOCATE 2, 2
+PRINT a
+
+END
