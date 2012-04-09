@@ -14,17 +14,17 @@ END IF
 
 test = 1
 
-WHILE pad > 1
+LOOP WHILE pad > 1
 	pad = pad - 1
 	test = test * 10
-END WHILE
+END LOOP
 
 pad = num
 
-WHILE pad < test
+LOOP WHILE pad < test
 	pad = pad * 10
 	PRINT 0
-END WHILE
+END LOOP
 
 PRINT num
 

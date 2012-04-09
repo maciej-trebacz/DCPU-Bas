@@ -16,7 +16,7 @@ import (
 
 var data *os.File
 var Look, Prev byte
-var Keywords = []string { "IF", "ELSE",  "WHILE", "END", "DIM", "CLS", "PRINT", "LOCATE", "REM", "COLOR" }
+var Keywords = []string { "IF", "ELSE",  "LOOP", "END", "DIM", "CLS", "PRINT", "LOCATE", "REM", "COLOR" }
 var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o', 'r', 'k' }
 var Token byte
 var Value string
@@ -536,16 +536,19 @@ func If() {
 	MatchString("IF")
 }
 
-func While() {
-	Next()
+func Loop() {
 	l1 := NewLabel()
 	l2 := NewLabel()
 	PostLabel(l1)
-	BoolExpression()
-	BranchFalse(l2)
+	Next()
+	if Value == "WHILE" {
+		Next()
+		BoolExpression()
+		BranchFalse(l2)
+	}
 	Block()
 	MatchString("END")
-	MatchString("WHILE")
+	MatchString("LOOP")
 	Branch(l1)
 	PostLabel(l2)
 }
@@ -581,7 +584,7 @@ func Block() {
 		case 'i':
 			If()
 		case 'w':
-			While()
+			Loop()
 		case 'c':
 			Cls()
 		case 'o':

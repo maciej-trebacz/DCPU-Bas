@@ -1,9 +1,9 @@
 DIM X, Y
 
 Y = 1
-WHILE Y <= 12
+LOOP WHILE Y <= 12
 	X = 1
-	WHILE X <= 32
+	LOOP WHILE X <= 32
 		LOCATE Y, X
 		IF X > 16 THEN
 			COLOR X, Y + 12
@@ -12,8 +12,8 @@ WHILE Y <= 12
 		END IF
 		PRINT X % 10
 		X = X + 1
-	END WHILE
+	END LOOP
 	Y = Y + 1
-END WHILE
+END LOOP
 
 END

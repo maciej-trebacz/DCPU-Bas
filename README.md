@@ -8,7 +8,7 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 * Arithmetics: + - * / %
 * Boolean operators: & ~ !
 * Relational operators: == <> < > <= >=
-* Control structures: IF, WHILE
+* Control structures: IF, LOOP
 * Variables (both integer and string)
 * Statements: CLS, LOCATE, PRINT, COLOR
 
@@ -23,14 +23,14 @@ Usage:
 
 Executes a code block if _condition_ is met. Optional ELSE block executed if _condition_ is NOT met.
 
-### WHILE
+### LOOP
 
 Usage:
-	WHILE _condition_
+	LOOP [WHILE _condition_]
 		...
 	END WHILE
 
-Loops through a code block when _condition_ is met.
+Loops through a code block. Whe _condition_ is supplied, loops while the _condition_ is met.
 
 ### CLS
 
