@@ -1,4 +1,4 @@
-VAR A, B, C
+DIM A, B, C
 
 A = 1
 B = 2

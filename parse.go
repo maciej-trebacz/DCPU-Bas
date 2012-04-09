@@ -10,8 +10,8 @@ import (
 
 var data *os.File
 var Look byte
-var Keywords = []string { "IF", "ELSE",  "WHILE", "END", "VAR", "CLS", "PRINT", "LOCATE" }
-var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'v', 'c', 'p', 'o' }
+var Keywords = []string { "IF", "ELSE",  "WHILE", "END", "DIM", "CLS", "PRINT", "LOCATE" }
+var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o' }
 var Token byte
 var Value string
 var LabelCount = 0
@@ -739,7 +739,7 @@ func Alloc() {
 
 func Declarations() {
 	Scan()
-	for Token == 'v' {
+	for Token == 'd' {
 		Alloc()
 		for Token == ',' {
 			Alloc()

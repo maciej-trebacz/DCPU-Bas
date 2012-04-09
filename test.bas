@@ -1,4 +1,4 @@
-VAR num, pad, test, big
+DIM num, pad, test, big
 
 big = 1
 
