@@ -76,6 +76,14 @@ func PopDiv() {
 	EmitLine("SET B, 0")
 }
 
+func PopMod() {
+	StackDepth--
+	EmitLine("SET B, POP")
+	EmitLine("MOD B, A")
+	EmitLine("SET A, B")
+	EmitLine("SET B, 0")
+}
+
 func PopAnd() {
 	StackDepth--
 	EmitLine("AND A, POP")
@@ -179,6 +187,18 @@ func Loc() {
 		EmitLine("SUB A, 1")
 		EmitLine("ADD X, A")
 	}
+}
+
+func Color() {
+	Next()
+	BoolExpression()
+	EmitLine("SET Y, 0")
+	EmitLine("SHL A, 12")
+	EmitLine("BOR Y, A")
+	Next()
+	BoolExpression()
+	EmitLine("SHL A, 8")
+	EmitLine("BOR Y, A")
 }
 
 func Lib() {

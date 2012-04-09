@@ -16,8 +16,8 @@ import (
 
 var data *os.File
 var Look, Prev byte
-var Keywords = []string { "IF", "ELSE",  "WHILE", "END", "DIM", "CLS", "PRINT", "LOCATE", "REM" }
-var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o', 'r' }
+var Keywords = []string { "IF", "ELSE",  "WHILE", "END", "DIM", "CLS", "PRINT", "LOCATE", "REM", "COLOR" }
+var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o', 'r', 'k' }
 var Token byte
 var Value string
 var LabelCount = 0
@@ -168,7 +168,7 @@ func IsAddOp(c byte) bool {
 }
 
 func IsMulOp(c byte) bool {
-	return c == '*' || c == '/'
+	return c == '*' || c == '/' || c == '%'
 }
 
 func IsWhite(c byte) bool {
@@ -287,6 +287,12 @@ func Op_Divide() {
 	Next()
 	Factor()
 	PopDiv()
+}
+
+func Op_Mod() {
+	Next()
+	Factor()
+	PopMod()
 }
 
 func Op_Equal() {
@@ -422,6 +428,8 @@ func TermCheck() {
 			Op_Multiply()
 		case '/':
 			Op_Divide()
+		case '%':
+			Op_Mod()
 		}
 	}
 }
@@ -582,6 +590,8 @@ func Block() {
 			Print()
 		case 'r':
 			Rem()
+		case 'k':
+			Color()
 		default:
 			Assignment()
 		}
