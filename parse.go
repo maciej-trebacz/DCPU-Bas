@@ -409,6 +409,8 @@ func Factor() {
 	} else {
 		if Value == "KEY" {
 			Call("getkey")
+		} else if Value == "INPUT" {
+			Input()
 		} else if Value == "STR" {
 			FuncStr()
 		} else if Value == "CHR" {

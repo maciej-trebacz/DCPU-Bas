@@ -10,7 +10,7 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 * Relational operators: == <> < > <= >=
 * Control structures: IF, LOOP
 * Variables (both integer and string)
-* Statements: CLS, LOCATE, PRINT, COLOR, KEY
+* Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT
 * Functions: STR, CHR
 
 ### IF
@@ -65,23 +65,34 @@ Sets current output color to _FOREGROUND_ and _BACKGROUND_. Both these values ca
 ### KEY
 
 Usage:
-	KEY 
+	DIM Code
+	Code = KEY 
 
 Used in an expression, it returns character code of last pressed key.
 
 ### STR
 
 Usage:
-	STR(_expression_)
+	DIM Char
+	Char = STR(_expression_)
 
 Returns an ASCII character from given character code.
 
 ### CHR
 
 Usage:
-	STR(_expression_)
+	DIM Code
+	Code = STR(_expression_)
 
 Returns a character code from first character of an ASCII string (opposite to STR)
+
+### INPUT
+
+Usage:
+	DIM YourName
+	YourName = INPUT
+
+Waits for user to enter a string followed by ENTER key, and returns this string as expression. User input is displayed on the screen.
 
 ### END
 

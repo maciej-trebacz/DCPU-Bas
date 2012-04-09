@@ -205,6 +205,36 @@ func Key() {
 	Next()
 }
 
+func Input() {
+	EmitLine("SET PUSH, 0x0")
+	EmitLine("SET I, SP")
+	EmitLine("SUB I, 1")
+	PostLabel("input")
+	EmitLine("IFE [0x9000], 0")
+	EmitLine("SET PC, input")
+	Call("getkey")
+	EmitLine("IFE A, 0xa")
+	EmitLine("SET PC, input2")
+	EmitLine("SET PUSH, A")
+	Call("printchar")
+	EmitLine("SET PC, input")
+	PostLabel("input2")
+	EmitLine("SET B, SP")
+	EmitLine("SET J, B")
+	PostLabel("input3")
+	EmitLine("SET A, [B]")
+	EmitLine("SET [B], [I]")
+	EmitLine("SET [I], A")
+	EmitLine("ADD B, 1")
+	EmitLine("SUB I, 1")
+	EmitLine("IFG B, I")
+	EmitLine("SET PC, input4")
+	EmitLine("SET PC, input3")
+	PostLabel("input4")
+	EmitLine("SET A, J")
+	EmitLine("BOR A, 0x8000")
+}
+
 func Lib() {
 	PostLabel("getkey") // Get key press
 	EmitLine("SET A, [0x9000]")
@@ -245,6 +275,7 @@ func Lib() {
 	Ret()
 
 	PostLabel("printstr") // Print string
+	EmitLine("IFG 0xF000, A") // Check if it's not a stack pointer
 	EmitLine("AND A, 0x7fff")
 	EmitLine("SET I, A") // Get string address
 	PostLabel("printstr1")
