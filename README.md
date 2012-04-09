@@ -5,12 +5,12 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 
 ## Features
 
-* Arithmetics: + - * /
+* Arithmetics: + - * / %
 * Boolean operators: & ~ !
 * Relational operators: == <> < > <= >=
 * Control structures: IF, WHILE
-* Variables (integer only for now)
-* Statements: CLS, LOCATE, PRINT
+* Variables (both integer and string)
+* Statements: CLS, LOCATE, PRINT, COLOR
 
 ### IF
 
@@ -42,9 +42,9 @@ Clears whole 32x16 screen (video buffer at 0x8000)
 ### PRINT
 
 Usage:
-	PRINT _expression_
+	PRINT _expression_ [; _expression]
 
-Prints _expression_ at current screen cursor location
+Prints _expression(s)_ at current screen cursor location, and sets cursor position to next line, row 1 at the end. Multiple expressions can be joined with semi-colon (;). 
 
 ### LOCATE
 
@@ -53,61 +53,21 @@ Usage:
 
 Sets current cursor location to _X_, _Y_. Set's only _Y_ if _X_ is not provided.
 
+### COLOR
+
+Usage
+	COLOR _FOREGROUND_, _BACKGROUND_
+
+Sets current output color to _FOREGROUND_ and _BACKGROUND_. Both these values can be 0 to 15.
+
 ### END
 
 Program MUST end with an END statement.
 
-## Sample Program
+## Demos
 
-	VAR A, B, C, D
-	A = 5
-	B = 20+A*10
-	C = B - 6
-	D = C
-	WHILE D > 0
-		D = D / 10
-		PRINT 0
-	END WHILE
-	PRINT C / 2
-	END
-
-This program declares three variables, then does some math, and finally prints the result (which is 32) to video memory.
-You can test the program with some web based emulators: [Donzanoid's real-time editor](http://dwilliamson.github.com/) or [Mappum's emulator](http://mappum.github.com/DCPU-16/).
-Output of the program isn't pretty, but hey, it works!
-
-## More complex sample program
-
-This little program gets a number, then pads it with 0's. There's a variable 'big' that let's you choose if you want
-a big or small number.
-
-	VAR num, pad, test, big
-
-	big = 1
-
-	pad = 4
-	test = 1
-
-	IF big == 1 THEN
-		num = 32
-	ELSE
-		num = 9
-	END IF
-
-	WHILE pad <> 0
-		pad = pad - 1
-		test = test * 10
-	END WHILE
-
-	pad = num
-
-	WHILE pad < test
-		pad = pad * 10
-		PRINT 0
-	END WHILE
-
-	PRINT num
-
-	END
+You can browse sample/ directory for sample .bas source files, as well as output/ directory for compiled .s (assembly) files of these samples.
+There are couple of web-based emulators that you can try these with, most notable: [deNULL's](http://denull.ru/dcpu/dcpu.htm).
 
 ## Licence
 
