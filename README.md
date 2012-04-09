@@ -17,9 +17,13 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 
 Usage:
 ```    IF _condition_ THEN
+
         ...
+
     [ELSE
+
         ...]
+
     END IF
 ```
 
@@ -29,7 +33,9 @@ Executes a code block if _condition_ is met. Optional ELSE block executed if _co
 
 Usage:
 ```    LOOP [WHILE _condition_]
+
         ...
+
     END WHILE
 ```
 
@@ -47,6 +53,7 @@ Clears whole 32x16 screen (video buffer at 0x8000)
 
 Usage:
 ```    PRINT _expression_ [; _expression]
+
     PRINT
 ```
 
@@ -56,6 +63,7 @@ Prints _expression(s)_ at current screen cursor location. Multiple expressions c
 
 Usage:
 ```    LOCATE _Y_[, _X_]
+
 ```
 
 Sets current cursor location to _X_, _Y_. Set's only _Y_ if _X_ is not provided.
@@ -64,6 +72,7 @@ Sets current cursor location to _X_, _Y_. Set's only _Y_ if _X_ is not provided.
 
 Usage:
 ```    COLOR _FOREGROUND_, _BACKGROUND_
+
 ```
 
 Sets current output color to _FOREGROUND_ and _BACKGROUND_. Both these values can be 0 to 15.
@@ -72,6 +81,7 @@ Sets current output color to _FOREGROUND_ and _BACKGROUND_. Both these values ca
 
 Usage:
 ```    DIM Code
+
     Code = KEY 
 ```
 
@@ -81,6 +91,7 @@ Used in an expression, it returns character code of last pressed key.
 
 Usage:
 ```    DIM Char
+
     Char = STR(_expression_)
 ```
 
@@ -90,6 +101,7 @@ Returns an ASCII character from given character code.
 
 Usage:
 ```    DIM Code
+
     Code = STR(_expression_)
 ```
 
@@ -99,8 +111,10 @@ Returns a character code from first character of an ASCII string (opposite to ST
 
 Usage:
 ```    DIM YourName
+
     YourName = INPUT
 ```
+
 Waits for user to enter a string followed by ENTER key, and returns this string as expression. User input is displayed on the screen.
 
 ### END
