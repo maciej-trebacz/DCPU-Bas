@@ -218,6 +218,15 @@ func Color() {
 	EmitLine("BOR Y, A")
 }
 
+func Poke() {
+	Next()
+	BoolExpression()
+	EmitLine("SET B, A")
+	Next()
+	BoolExpression()
+	EmitLine("SET [B], A")
+}
+
 func Key() {
 	Next()
 }

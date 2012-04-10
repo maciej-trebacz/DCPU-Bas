@@ -10,8 +10,8 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 * Relational operators: == <> < > <= >=
 * Control structures: IF, LOOP
 * Variables (both integer and string)
-* Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT
-* Functions: STR, CHR
+* Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT, POKE
+* Functions: STR, CHR, PEEK
 
 ## Language documentation
 
@@ -127,6 +127,27 @@ YourName = INPUT
 ```
 
 Waits for user to enter a string followed by ENTER key, and returns this string as expression. User input is displayed on the screen.
+
+### PEEK
+
+Usage:
+
+```
+DIM MemoryValue
+MemoryValue = PEEK(_address)
+```
+
+Reads directly the memory and returns a number representing word at given memory _address_.
+
+### POKE
+
+Usage:
+
+```
+POKE _address_, _value_
+```
+
+Writes directly to memory, sets word at _address_ to given _value_.
 
 ### END
 

@@ -33,3 +33,11 @@ func FuncChr() {
 	EmitLine("SET PUSH, [A]")
 	EmitLine("SET A, POP")
 }
+
+func FuncPeek() {
+	Next()
+	MatchString("(")
+	BoolExpression()
+	EmitLine("SET B, [A]")
+	EmitLine("SET A, B")
+}

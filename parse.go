@@ -16,8 +16,8 @@ import (
 
 var data *os.File
 var Look, Prev byte
-var Keywords = []string { "IF", "ELSE",  "LOOP", "END", "DIM", "CLS", "PRINT", "LOCATE", "REM", "COLOR" }
-var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o', 'r', 'k' }
+var Keywords = []string { "IF", "ELSE",  "LOOP", "END", "DIM", "CLS", "PRINT", "LOCATE", "REM", "COLOR", "POKE" }
+var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o', 'r', 'k', 'q' }
 var Token byte
 var Value string
 var LabelCount = 0
@@ -421,6 +421,8 @@ func Factor() {
 			FuncStr()
 		} else if Value == "CHR" {
 			FuncChr()
+		} else if Value == "PEEK" {
+			FuncPeek()
 		} else if Token == 'x' {
 			LoadVar(Value)
 		} else if Token == '#' {
@@ -613,6 +615,8 @@ func Block() {
 			Rem()
 		case 'k':
 			Color()
+		case 'q':
+			Poke()
 		default:
 			Assignment()
 		}
