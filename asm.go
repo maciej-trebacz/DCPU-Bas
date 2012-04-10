@@ -73,7 +73,6 @@ func PopDiv() {
 	EmitLine("SET B, POP")
 	EmitLine("DIV B, A")
 	EmitLine("SET A, B")
-	EmitLine("SET B, 0")
 }
 
 func PopMod() {
@@ -81,7 +80,19 @@ func PopMod() {
 	EmitLine("SET B, POP")
 	EmitLine("MOD B, A")
 	EmitLine("SET A, B")
-	EmitLine("SET B, 0")
+}
+
+func PopPow() {
+	StackDepth--
+	l := NewLabel()
+	EmitLine("SET B, POP")
+	EmitLine("SET I, A")
+	EmitLine("SET A, 1")
+	PostLabel(l)
+	EmitLine("MUL A, B")
+	EmitLine("SUB I, 1")
+	EmitLine("IFN I, 0")
+	Branch(l)
 }
 
 func PopAnd() {

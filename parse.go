@@ -295,6 +295,12 @@ func Op_Mod() {
 	PopMod()
 }
 
+func Op_Pow() {
+	Next()
+	Factor()
+	PopPow()
+}
+
 func Op_Equal() {
 	MatchString("=")
 	NextExpression()
@@ -425,6 +431,10 @@ func Factor() {
 			Expected("Math Factor")
 		}
 		Next()
+	}
+	if Token == '^' {
+		Push()
+		Op_Pow()
 	}
 }
 
