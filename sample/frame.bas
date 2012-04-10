@@ -1,6 +1,6 @@
-DIM CHR, I, P
+DIM CHAR, I, P
 
-CHR = "*"
+CHAR = "*"
 I = 1
 P = 0
 
@@ -28,7 +28,7 @@ LOOP
 		COLOR 1, 0
 	END IF
 	
-	PRINT CHR
+	PRINT CHAR
 
 	I = I + 1
 	IF I > 85 THEN
