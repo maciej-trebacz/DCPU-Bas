@@ -110,6 +110,20 @@ func PopXor() {
 	EmitLine("XOR A, POP")
 }
 
+func PopShl() {
+	StackDepth--
+	EmitLine("SET B, POP")
+	EmitLine("SHL B, A")
+	EmitLine("SET A, B")
+}
+
+func PopShr() {
+	StackDepth--
+	EmitLine("SET B, POP")
+	EmitLine("SHR B, A")
+	EmitLine("SET A, B")
+}
+
 func PopCompare() {
 	StackDepth--
 	EmitLine("SET B, POP")
@@ -227,8 +241,23 @@ func Poke() {
 	EmitLine("SET [B], A")
 }
 
-func Key() {
-	Next()
+func PutChar() {
+	SkipWhite()
+	if (Look == '"') {
+		GetChar()
+		EmitLine(fmt.Sprintf("SET [0x8000+X], %d", Look))
+		GetChar()
+		GetChar()
+		Token = '$'
+		Next()
+	} else {
+		Next()
+		Factor()
+		EmitLine("SET [0x8000+X], A")
+	}
+	EmitLine("BOR [0x8000+X], Y")
+	EmitLine("ADD X, 1")
+	EmitLine("AND X, 0x1ff")
 }
 
 func Input() {

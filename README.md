@@ -7,6 +7,7 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 
 * Arithmetics: + - * / %
 * Boolean operators: & ~ !
+* Bit shifts: << >>
 * Relational operators: == <> < > <= >=
 * Control structures: IF, LOOP
 * Variables (both integer and string)
@@ -72,6 +73,18 @@ PRINT "Hello "; A
 PRINT "A sentence within "; CONTINUE
 PRINT "the same line."
 ```
+
+### PUTCHAR
+
+Usage:
+
+```
+PUTCHAR "c"
+PUTCHAR expression
+```
+
+Fast way (5x faster than PRINT "c") to output a single character to video buffer at current cursor position. It can be either a string literal _c_
+in double quotes, or a math expression (which could be a single number) returning character ascii code.
 
 ### LOCATE
 

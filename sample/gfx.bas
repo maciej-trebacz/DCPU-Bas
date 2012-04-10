@@ -1,26 +1,15 @@
-DIM X, Y, COL, TICK
+DIM X, I
 
 X = 1
-Y = X
-X = X + Y * 2
-COL = X - Y + 2
-TICK = COL - Y / 1
+I = 1
 
-LOOP
-	LOOP
-		COL = (X * Y + Y * Y + TICK) + 1
-		COLOR 1, COL
-		PRINT " "
-		X = X + 1
-		TICK = TICK + 1
-		IF X > 32 THEN
-			X = 1
-			Y = Y + 1
-			IF Y > 12 THEN
-				Y = 1
-			END IF
-		END IF
-	END LOOP
+LOOP 
+	X = I
+	X = (X * (X * X * 15731 + 789221) + 1376312589) / 5293 % 3
+	I = I + 1
+	IF X == 2 THEN X = 8 END IF
+	COLOR 1, X + 7
+	PUTCHAR " "
 END LOOP
 
 END

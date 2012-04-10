@@ -16,8 +16,8 @@ import (
 
 var data *os.File
 var Look, Prev byte
-var Keywords = []string { "IF", "ELSE",  "LOOP", "END", "DIM", "CLS", "PRINT", "LOCATE", "REM", "COLOR", "POKE" }
-var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o', 'r', 'k', 'q' }
+var Keywords = []string { "IF", "ELSE",  "LOOP", "END", "DIM", "CLS", "PRINT", "LOCATE", "REM", "COLOR", "POKE", "PUTCHAR" }
+var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o', 'r', 'k', 'q', 'u' }
 var Token byte
 var Value string
 var LabelCount = 0
@@ -263,6 +263,9 @@ func GetOp() {
 	Token = Look
 	Value = string(Look)
 	GetChar()
+	if Look != ' ' && !IsAlNum(Look) {
+		Value += string(Look)
+	}
 }
 
 func Op_Add() {
@@ -301,8 +304,24 @@ func Op_Pow() {
 	PopPow()
 }
 
+func Op_ShiftLeft() {
+	Next()
+	Next()
+	Push()
+	Factor()
+	PopShl()
+}
+
+func Op_ShiftRight() {
+	Next()
+	Next()
+	Push()
+	Factor()
+	PopShr()
+}
+
 func Op_Equal() {
-	MatchString("=")
+	MatchString("==")
 	NextExpression()
 	SetEqual()
 }
@@ -411,7 +430,7 @@ func Factor() {
 	if Token == '(' {
 		Next()
 		Expression()
-		MatchString(")")
+		Next()
 	} else {
 		if Value == "KEY" {
 			Call("getkey")
@@ -437,6 +456,10 @@ func Factor() {
 	if Token == '^' {
 		Push()
 		Op_Pow()
+	} else if Value == "<<" {
+		Op_ShiftLeft()
+	} else if Value == ">>" {
+		Op_ShiftRight()
 	}
 }
 
@@ -591,21 +614,6 @@ func Print() {
 	if newLine {
 		Call("printnl")
 	}
-	/*
-	if Prev != '\n' {
-		Next()
-		BoolExpression()
-		Call("print")
-		for Token == ';' {
-			Next()
-			BoolExpression()
-			Call("print")
-		}
-	} else {
-		Next()
-		Call("printnl")
-	}
-	*/
 }
 
 func Rem() {
@@ -636,6 +644,8 @@ func Block() {
 			Color()
 		case 'q':
 			Poke()
+		case 'u':
+			PutChar()
 		default:
 			Assignment()
 		}
