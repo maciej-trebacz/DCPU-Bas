@@ -13,6 +13,10 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 * Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT
 * Functions: STR, CHR
 
+## Language documentation
+
+Below are language statements and functions explained:
+
 ### IF
 
 Usage:
