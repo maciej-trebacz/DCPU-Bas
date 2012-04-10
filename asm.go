@@ -242,13 +242,10 @@ func Lib() {
 	Ret()
 
 	PostLabel("printchar") // Print char
-	EmitLine("SET B, X") // Get current cursor position
-	EmitLine("ADD B, 0x8000") // Add video mem address
-	EmitLine("BOR A, Y") // Apply color code
-	EmitLine("SET [B], A") // Set video memory byte to show char
+	EmitLine("SET [0x8000+X], A") // Print char at cursor position
+	EmitLine("BOR [0x8000+X], Y") // Apply color style
 	EmitLine("ADD X, 1") // Increment cursor position
-	EmitLine("IFN X, 0x160") // Check if we should do next line (X > 32)
-	EmitLine("SET PC, pnline")
+	EmitLine("IFG X, 0x21f") // Check if we should do next line (X > 32)
 	EmitLine("SET X, 0") // First row, first column
 	PostLabel("pnline")
 	Ret()
