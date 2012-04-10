@@ -165,6 +165,11 @@ func BranchFalse(s string) {
 }
 
 func Prolog() {
+	EmitLine("SET PUSH X")
+	EmitLine("SET PUSH Y")
+	EmitLine("SET PUSH Z")
+	EmitLine("SET PUSH I")
+	EmitLine("SET PUSH J")
 	EmitLine("SET Y, 0x7000") // Set color to white
 }
 
@@ -311,10 +316,18 @@ func Lib() {
 }
 
 func Epilog() {
-	EmitLine("SET PC, crash")
+	EmitLine("SET J, POP")
+	EmitLine("SET I, POP")
+	EmitLine("SET Z, POP")
+	EmitLine("SET Y, POP")
+	EmitLine("SET X, POP")
+	EmitLine("SET PC, end")
 	EmitLine("")
 	EmitLine("; compiled functions")
 	Lib()
+	PostLabel("end")
+	EmitLine("IFN SP, 0")
+	EmitLine("SET PC, POP")
 	PostLabel("crash")
 	EmitLine("SET PC, crash")
 }
