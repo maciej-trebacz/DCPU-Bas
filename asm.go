@@ -328,6 +328,6 @@ func Epilog() {
 	PostLabel("end")
 	EmitLine("IFN SP, 0")
 	EmitLine("SET PC, POP")
-	PostLabel("crash")
-	EmitLine("SET PC, crash")
+	PostLabel("halt")
+	EmitLine("SET PC, halt")
 }
