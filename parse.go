@@ -574,6 +574,24 @@ func Loop() {
 }
 
 func Print() {
+	newLine := true
+	Next()
+	BoolExpression()
+	Call("print")
+	for Token == ';' {
+		Next()
+		if Value == "CONTINUE" {
+			Next()
+			newLine = false
+			break
+		}
+		BoolExpression()
+		Call("print")
+	}
+	if newLine {
+		Call("printnl")
+	}
+	/*
 	if Prev != '\n' {
 		Next()
 		BoolExpression()
@@ -587,6 +605,7 @@ func Print() {
 		Next()
 		Call("printnl")
 	}
+	*/
 }
 
 func Rem() {

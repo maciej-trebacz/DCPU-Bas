@@ -3,10 +3,9 @@ DIM A, B
 A = "HELLO"
 B = "WORLD"
 
-PRINT A; " "; B; "! "
-PRINT
+PRINT A; " "; CONTINUE
+PRINT B
 PRINT "SUCESS!"
-PRINT
-PRINT CHR(A) - 30
+PRINT "The answer is: "; CHR(A) - 30
 
 END

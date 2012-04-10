@@ -1,9 +1,9 @@
 DIM MyName
 
-PRINT "Enter your name: "
+PRINT "Enter your name: "; CONTINUE
 MyName = INPUT
 
-PRINT
+PRINT " "
 PRINT "Hello, "; MyName; "!"
 
 END

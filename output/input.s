@@ -6,38 +6,56 @@
 	SET A, SP
 	SET PUSH, A
 	SET Y, 0x7000
-	SUB SP, 2 ; Alloc space on stack
-	ADD PC, 6
-	:c0 DAT "HELLO", 0
+	SUB SP, 1 ; Alloc space on stack
+	ADD PC, 18
+	:c0 DAT "Enter your name: ", 0
 	SET A, c0
 	BOR A, 0x8000
+	JSR print
+	SET PUSH, 0x0
+	SET I, SP
+	SUB I, 1
+	:input
+	IFE [0x9000], 0
+	SET PC, input
+	JSR getkey
+	IFE A, 0xa
+	SET PC, input2
+	SET PUSH, A
+	JSR printchar
+	SET PC, input
+	:input2
+	SET B, SP
+	SET J, B
+	:input3
+	SET A, [B]
+	SET [B], [I]
+	SET [I], A
+	ADD B, 1
+	SUB I, 1
+	IFG B, I
+	SET PC, input4
+	SET PC, input3
+	:input4
+	SET A, J
+	BOR A, 0x8000
 	SET [0xffff], A
-	ADD PC, 6
-	:c1 DAT "WORLD", 0
+	ADD PC, 2
+	:c1 DAT " ", 0
 	SET A, c1
 	BOR A, 0x8000
-	SET [0xfffe], A
-	ADD PC, 6
-	:c2 DAT "World", 0
+	JSR print
+	JSR printnl
+	ADD PC, 8
+	:c2 DAT "Hello, ", 0
 	SET A, c2
-	BOR A, 0x8000
-	SET [0xffff], A
-	ADD PC, 7
-	:c3 DAT "Hello ", 0
-	SET A, c3
 	BOR A, 0x8000
 	JSR print
 	SET A, [0xffff]
 	JSR print
-	JSR printnl
-	ADD PC, 19
-	:c4 DAT "A sentence within ", 0
-	SET A, c4
-	BOR A, 0x8000
-	JSR print
-	ADD PC, 14
-	:c5 DAT "the same line", 0
-	SET A, c5
+	ADD PC, 2
+	:c3 DAT "!", 0
+	SET A, c3
 	BOR A, 0x8000
 	JSR print
 	JSR printnl

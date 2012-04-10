@@ -5,7 +5,7 @@
 	SET PUSH, J
 	SET A, SP
 	SET PUSH, A
-	SET Y, 0x0000
+	SET Y, 0x7000
 	SUB SP, 2 ; Alloc space on stack
 	SET A, 0x1
 	SET [0xfffe], A
@@ -84,6 +84,7 @@
 	MOD B, A
 	SET A, B
 	JSR print
+	JSR printnl
 	SET A, [0xffff]
 	SET PUSH, A
 	SET A, 0x1

@@ -191,6 +191,11 @@
 	SET A, 0x0
 	SHL A, 8
 	BOR Y, A
+	ADD PC, 2
+	:c14 DAT " ", 0
+	SET A, c14
+	BOR A, 0x8000
+	JSR print
 	JSR printnl
 	SET A, 0x0
 	SET [0xfffc], A
@@ -227,18 +232,24 @@
 	:l5
 	SET A, 0x0
 	SET [0xfffa], A
+	ADD PC, 2
+	:c15 DAT " ", 0
+	SET A, c15
+	BOR A, 0x8000
+	JSR print
 	JSR printnl
 	ADD PC, 32
-	:c14 DAT "-------------------------------", 0
-	SET A, c14
+	:c16 DAT "-------------------------------", 0
+	SET A, c16
 	BOR A, 0x8000
 	JSR print
 	JSR printnl
 	ADD PC, 20
-	:c15 DAT "Press any key . . .", 0
-	SET A, c15
+	:c17 DAT "Press any key . . .", 0
+	SET A, c17
 	BOR A, 0x8000
 	JSR print
+	JSR printnl
 	:l6
 	SET A, [0xfffa]
 	SET PUSH, A
@@ -261,8 +272,8 @@
 	SET PC, l8
 	SET X, 0
 	ADD PC, 14
-	:c16 DAT "You pressed: ", 0
-	SET A, c16
+	:c18 DAT "You pressed: ", 0
+	SET A, c18
 	BOR A, 0x8000
 	JSR print
 	SET A, [0xfffa]
@@ -276,10 +287,11 @@
 	JSR print
 	JSR printnl
 	ADD PC, 10
-	:c17 DAT "Test end.", 0
-	SET A, c17
+	:c19 DAT "Test end.", 0
+	SET A, c19
 	BOR A, 0x8000
 	JSR print
+	JSR printnl
 	SET J, POP
 	SET I, POP
 	SET Z, POP

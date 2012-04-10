@@ -23,7 +23,7 @@ pad = num
 
 LOOP WHILE pad < test
 	pad = pad * 10
-	PRINT 0
+	PRINT "0"; CONTINUE
 END LOOP
 
 PRINT num

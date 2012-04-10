@@ -58,11 +58,20 @@ Clears whole 32x16 screen (video buffer at 0x8000)
 Usage:
 
 ```
-PRINT expression [; expression]
+PRINT expression [; expression][; CONTINUE]
 PRINT
 ```
 
-Prints _expression(s)_ at current screen cursor location. Multiple expressions can be joined with semi-colon (;). If no expression is given, it sets cursor to column 1 of next terminal row.
+Prints _expression(s)_ at current screen cursor location. Multiple expressions can be joined with semi-colon (;).  
+After printing all expressions cursor position will be set to next row, column 1, unless CONTINUE keyword is given at the end of expression list.  
+Example:
+
+```
+A = "World"
+PRINT "Hello "; A
+PRINT "A sentence within "; CONTINUE
+PRINT "the same line."
+```
 
 ### LOCATE
 

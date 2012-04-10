@@ -1,5 +1,12 @@
+	SET PUSH, X
+	SET PUSH, Y
+	SET PUSH, Z
+	SET PUSH, I
+	SET PUSH, J
+	SET A, SP
+	SET PUSH, A
+	SET Y, 0x7000
 	SUB SP, 4 ; Alloc space on stack
-	:begin
 	SET A, 0x1
 	SET [0xfffc], A
 	SET A, 0x4
@@ -64,25 +71,43 @@
 	SET A, 0xa
 	MUL A, POP
 	SET [0xfffe], A
-	SET A, 0x0
+	ADD PC, 2
+	:c0 DAT "0", 0
+	SET A, c0
+	BOR A, 0x8000
 	JSR print
-	JSR printnl
 	SET PC, l4
 	:l5
 	SET A, [0xffff]
 	JSR print
 	JSR printnl
-	SET PC, crash
+	SET J, POP
+	SET I, POP
+	SET Z, POP
+	SET Y, POP
+	SET X, POP
+	SET A, POP
+	SET SP, A
+	SET PC, end
 	
 	; compiled functions
+	:getkey
+	SET A, [0x9000]
+	SET [0x9000], 0
+	SET PC, POP
+	:strlen
+	SET I, A
+	:strlen1
+	ADD I, 1
+	IFN [I], 0x0
+	SET PC, strlen1
+	SET A, B
+	SET PC, POP
 	:printchar
-	SET B, X
-	ADD B, 0x8000
-	BOR A, Y
-	SET [B], A
+	SET [0x8000+X], A
+	BOR [0x8000+X], Y
 	ADD X, 1
-	IFN X, 0x160
-	SET PC, pnline
+	IFG X, 0x21f
 	SET X, 0
 	:pnline
 	SET PC, POP
@@ -107,6 +132,7 @@
 	SET A, POP
 	SET PC, POP
 	:printstr
+	IFG 0xF000, A
 	AND A, 0x7fff
 	SET I, A
 	:printstr1
@@ -129,5 +155,8 @@
 	IFE B, 1
 	JSR printstr
 	SET PC, POP
-	:crash
-	SET PC, crash
+	:end
+	IFN SP, 0
+	SET PC, POP
+	:halt
+	SET PC, halt
