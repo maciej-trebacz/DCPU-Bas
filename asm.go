@@ -165,11 +165,13 @@ func BranchFalse(s string) {
 }
 
 func Prolog() {
-	EmitLine("SET PUSH X")
-	EmitLine("SET PUSH Y")
-	EmitLine("SET PUSH Z")
-	EmitLine("SET PUSH I")
-	EmitLine("SET PUSH J")
+	EmitLine("SET PUSH, X")
+	EmitLine("SET PUSH, Y")
+	EmitLine("SET PUSH, Z")
+	EmitLine("SET PUSH, I")
+	EmitLine("SET PUSH, J")
+	EmitLine("SET A, SP")
+	EmitLine("SET PUSH, A")
 	EmitLine("SET Y, 0x7000") // Set color to white
 }
 
@@ -178,15 +180,14 @@ func Ret() {
 }
 
 func Cls() {
-	EmitLine("SET A, 0x200")
+	EmitLine("SET I, 0x8220")
 	l := NewLabel()
 	PostLabel(l)
-	EmitLine("SET B, 0x8000")
-	EmitLine("ADD B, A")
-	EmitLine("SET [B], 0")
-	EmitLine("SUB A, 1")
-	BranchFalse(l)
-	EmitLine("SET [0x8000], 0")
+	EmitLine("SUB I, 1")
+	EmitLine("SET [I], 0")
+	EmitLine("IFN I, 0x8000")
+	Branch(l)
+	EmitLine("SET X, 0")
 	Next()
 }
 
@@ -257,6 +258,15 @@ func Lib() {
 	EmitLine("SET [0x9000], 0")
 	Ret()
 
+	PostLabel("strlen") // gets string length
+	EmitLine("SET I, A")
+	PostLabel("strlen1")
+	EmitLine("ADD I, 1")
+	EmitLine("IFN [I], 0x0")
+	Branch("strlen1")
+	EmitLine("SET A, B")
+	Ret()
+
 	PostLabel("printchar") // Print char
 	EmitLine("SET [0x8000+X], A") // Print char at cursor position
 	EmitLine("BOR [0x8000+X], Y") // Apply color style
@@ -321,6 +331,8 @@ func Epilog() {
 	EmitLine("SET Z, POP")
 	EmitLine("SET Y, POP")
 	EmitLine("SET X, POP")
+	EmitLine("SET A, POP")
+	EmitLine("SET SP, A")
 	EmitLine("SET PC, end")
 	EmitLine("")
 	EmitLine("; compiled functions")

@@ -1,4 +1,4 @@
-DIM A, B, C, COUNTER, Text
+DIM A, B, C, COUNTER, Text, K
 
 REM Check simple print
 PRINT "Hello"; " "; "world!"
@@ -47,5 +47,24 @@ LOOP WHILE COUNTER < 16
 	PRINT COUNTER % 10
 	COUNTER = COUNTER + 1
 END LOOP
+
+REM KEY check
+
+K = 0
+PRINT
+PRINT "-------------------------------"
+PRINT
+PRINT "Press any key . . ."
+
+LOOP WHILE K == 0
+	K = KEY
+END LOOP
+
+REM CLS check
+CLS
+
+PRINT "You pressed: "; STR(K)
+PRINT
+PRINT "Test end."
 
 END

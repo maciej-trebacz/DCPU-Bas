@@ -1,5 +1,12 @@
-	SUB SP, 5 ; Alloc space on stack
+	SET PUSH, X
+	SET PUSH, Y
+	SET PUSH, Z
+	SET PUSH, I
+	SET PUSH, J
+	SET A, SP
+	SET PUSH, A
 	SET Y, 0x7000
+	SUB SP, 6 ; Alloc space on stack
 	ADD PC, 6
 	:c0 DAT "Hello", 0
 	SET A, c0
@@ -218,12 +225,82 @@
 	SET [0xfffc], A
 	SET PC, l4
 	:l5
-	SET PC, crash
+	SET A, 0x0
+	SET [0xfffa], A
+	JSR printnl
+	ADD PC, 32
+	:c14 DAT "-------------------------------", 0
+	SET A, c14
+	BOR A, 0x8000
+	JSR print
+	JSR printnl
+	ADD PC, 20
+	:c15 DAT "Press any key . . .", 0
+	SET A, c15
+	BOR A, 0x8000
+	JSR print
+	:l6
+	SET A, [0xfffa]
+	SET PUSH, A
+	SET A, 0x0
+	SET B, POP
+	SET C, 1
+	IFE A, B
+	SET C, 0
+	IFN C, 0
+	SET PC, l7
+	JSR getkey
+	SET [0xfffa], A
+	SET PC, l6
+	:l7
+	SET I, 0x8220
+	:l8
+	SUB I, 1
+	SET [I], 0
+	IFN I, 0x8000
+	SET PC, l8
+	SET X, 0
+	ADD PC, 14
+	:c16 DAT "You pressed: ", 0
+	SET A, c16
+	BOR A, 0x8000
+	JSR print
+	SET A, [0xfffa]
+	ADD PC, 2
+	:l9
+	DAT 0
+	DAT 0
+	SET [l9], A
+	SET A, l9
+	BOR A, 0x8000
+	JSR print
+	JSR printnl
+	ADD PC, 10
+	:c17 DAT "Test end.", 0
+	SET A, c17
+	BOR A, 0x8000
+	JSR print
+	SET J, POP
+	SET I, POP
+	SET Z, POP
+	SET Y, POP
+	SET X, POP
+	SET A, POP
+	SET SP, A
+	SET PC, end
 	
 	; compiled functions
 	:getkey
 	SET A, [0x9000]
 	SET [0x9000], 0
+	SET PC, POP
+	:strlen
+	SET I, A
+	:strlen1
+	ADD I, 1
+	IFN [I], 0x0
+	SET PC, strlen1
+	SET A, B
 	SET PC, POP
 	:printchar
 	SET [0x8000+X], A
@@ -277,5 +354,8 @@
 	IFE B, 1
 	JSR printstr
 	SET PC, POP
-	:crash
-	SET PC, crash
+	:end
+	IFN SP, 0
+	SET PC, POP
+	:halt
+	SET PC, halt

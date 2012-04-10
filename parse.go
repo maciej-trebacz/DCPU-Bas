@@ -654,8 +654,8 @@ func Init() {
 
 func Program() {
 	Init()
-	Declarations()
 	Prolog()
+	Declarations()
 	Block()
 	MatchString("END")
 	Epilog()
