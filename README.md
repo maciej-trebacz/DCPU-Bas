@@ -22,7 +22,7 @@ Below are language statements and functions explained:
 Usage:
 
 ```
-IF _condition_ THEN
+IF condition THEN
 	...
 [ELSE
 	...]
@@ -36,7 +36,7 @@ Executes a code block if _condition_ is met. Optional ELSE block executed if _co
 Usage:
 
 ```
-LOOP [WHILE _condition_]
+LOOP [WHILE condition]
 	...
 END WHILE
 ```
@@ -58,7 +58,7 @@ Clears whole 32x16 screen (video buffer at 0x8000)
 Usage:
 
 ```
-PRINT _expression_ [; _expression]
+PRINT expression [; expression]
 PRINT
 ```
 
@@ -69,7 +69,7 @@ Prints _expression(s)_ at current screen cursor location. Multiple expressions c
 Usage:
 
 ```
-LOCATE _Y_[, _X_]
+LOCATE Y[, X]
 ```
 
 Sets current cursor location to _X_, _Y_. Set's only _Y_ if _X_ is not provided.
@@ -79,7 +79,7 @@ Sets current cursor location to _X_, _Y_. Set's only _Y_ if _X_ is not provided.
 Usage:
 
 ```
-COLOR _FOREGROUND_, _BACKGROUND_
+COLOR FOREGROUND, BACKGROUND
 ```
 
 Sets current output color to _FOREGROUND_ and _BACKGROUND_. Both these values can be 0 to 15.
@@ -101,7 +101,7 @@ Usage:
 
 ```
 DIM Char
-Char = STR(_expression_)
+Char = STR(expression)
 ```
 
 Returns an ASCII character from given character code.
@@ -112,7 +112,7 @@ Usage:
 
 ```
 DIM Code
-Code = STR(_expression_)
+Code = STR(expression)
 ```
 
 Returns a character code from first character of an ASCII string (opposite to STR)
@@ -134,7 +134,7 @@ Usage:
 
 ```
 DIM MemoryValue
-MemoryValue = PEEK(_address)
+MemoryValue = PEEK(address)
 ```
 
 Reads directly the memory and returns a number representing word at given memory _address_.
@@ -144,7 +144,7 @@ Reads directly the memory and returns a number representing word at given memory
 Usage:
 
 ```
-POKE _address_, _value_
+POKE address, value
 ```
 
 Writes directly to memory, sets word at _address_ to given _value_.
