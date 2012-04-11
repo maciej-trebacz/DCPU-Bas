@@ -187,6 +187,7 @@ func Prolog() {
 	EmitLine("SET A, SP")
 	EmitLine("SET PUSH, A")
 	EmitLine("SET Y, 0x7000") // Set color to white
+	EmitLine("SET Z, 0x9000") // Key pointer
 }
 
 func Ret() {
@@ -265,13 +266,22 @@ func Input() {
 	EmitLine("SET I, SP")
 	EmitLine("SUB I, 1")
 	PostLabel("input")
-	EmitLine("IFE [0x9000], 0")
-	EmitLine("SET PC, input")
+	EmitLine("SET A, 0")
 	Call("getkey")
+	EmitLine("IFE A, 0")
+	EmitLine("SET PC, input")
 	EmitLine("IFE A, 0xa")
 	EmitLine("SET PC, input2")
+	EmitLine("IFE A, 0x8")
+	EmitLine("SET PC, inputbsp")
 	EmitLine("SET PUSH, A")
 	Call("printchar")
+	EmitLine("SET PC, input")
+	PostLabel("inputbsp")
+	EmitLine("SET POP, 0")
+	EmitLine("SUB X, 1")
+	EmitLine("SET [0x8000+X], 0")
+	EmitLine("BOR [0x8000+X], Y")
 	EmitLine("SET PC, input")
 	PostLabel("input2")
 	EmitLine("SET B, SP")
@@ -292,8 +302,12 @@ func Input() {
 
 func Lib() {
 	PostLabel("getkey") // Get key press
-	EmitLine("SET A, [0x9000]")
-	EmitLine("SET [0x9000], 0")
+	EmitLine("IFE [Z], 0")
+	Ret()
+	EmitLine("SET A, [Z]")
+	EmitLine("SET [Z], 0")
+	EmitLine("ADD Z, 1")
+	EmitLine("AND Z, 0x900f")
 	Ret()
 
 	PostLabel("strlen") // gets string length
@@ -376,8 +390,8 @@ func Epilog() {
 	EmitLine("; compiled functions")
 	Lib()
 	PostLabel("end")
-	EmitLine("IFN SP, 0")
-	EmitLine("SET PC, POP")
-	PostLabel("halt")
-	EmitLine("SET PC, halt")
+//	EmitLine("IFN SP, 0")
+//	EmitLine("SET PC, POP")
+//	PostLabel("halt")
+	EmitLine("SET PC, end")
 }
