@@ -1,0 +1,242 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>DCPU-Bas by M4v3R</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/M4v3R/DCPU-Bas">Fork On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/M4v3R/DCPU-Bas/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/M4v3R/DCPU-Bas/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>DCPU-Bas</h1>
+          <p>QuickBasic-like compiler for DCPU in 0x10c game</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/M4v3R">M4v3R</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>DCPU-Bas - 0xBASIC language for DCPU-16</h1>
+
+<p>DCPU-Bas is a simple QuickBASIC-like compiler for virtual DCPU in Notch's <a href="http://www.0x10c.com">0x10c Game</a>,<br>
+written in <a href="http://golang.org">Go language</a>.<br>
+Compiler structure and engine is heavily inspired by <a href="http://compilers.iecc.com/crenshaw/">Let's Build a Compiler, by Jack Crenshaw</a>.</p>
+
+<h2>Features</h2>
+
+<ul>
+<li>Arithmetics: + - * / %</li>
+<li>Boolean operators: &amp; ~ !</li>
+<li>Bit shifts: &lt;&lt; &gt;&gt;</li>
+<li>Relational operators: == &lt;&gt; &lt; &gt; &lt;= &gt;=</li>
+<li>Control structures: IF, LOOP</li>
+<li>Variables (both integer and string)</li>
+<li>Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT, POKE</li>
+<li>Functions: STR, CHR, PEEK</li>
+</ul><h2>How to get it.</h2>
+
+<p>Easiest way is to get the binaries from the <a href="https://github.com/M4v3R/DCPU-Bas/downloads">downloads section</a>.<br>
+You can also build it from the latest sources. In that case, you need to:</p>
+
+<ul>
+<li>Get and setup <a href="http://golang.org/doc/install">Go</a>
+</li>
+<li>Get the <a href="https://github.com/M4v3R/DCPU-Bas/zipball/master">latest sources</a> and unpack them to a directory</li>
+<li>On the command line, within that directory, type: <code>go build</code>
+</li>
+</ul><p>That should do it.</p>
+
+<h2>Language documentation</h2>
+
+<p>Below are language statements and functions explained:</p>
+
+<h3>IF</h3>
+
+<p>Usage:</p>
+
+<pre><code>IF condition THEN
+    ...
+[ELSE
+    ...]
+END IF
+</code></pre>
+
+<p>Executes a code block if <em>condition</em> is met. Optional ELSE block executed if <em>condition</em> is NOT met.</p>
+
+<h3>LOOP</h3>
+
+<p>Usage:</p>
+
+<pre><code>LOOP [WHILE condition]
+    ...
+END WHILE
+</code></pre>
+
+<p>Loops through a code block. Whe <em>condition</em> is supplied, loops while the <em>condition</em> is met.</p>
+
+<h3>CLS</h3>
+
+<p>Usage:</p>
+
+<pre><code>CLS
+</code></pre>
+
+<p>Clears whole 32x16 screen (video buffer at 0x8000)</p>
+
+<h3>PRINT</h3>
+
+<p>Usage:</p>
+
+<pre><code>PRINT expression [; expression][; CONTINUE]
+PRINT
+</code></pre>
+
+<p>Prints <em>expression(s)</em> at current screen cursor location. Multiple expressions can be joined with semi-colon (;).<br>
+After printing all expressions cursor position will be set to next row, column 1, unless CONTINUE keyword is given at the end of expression list.<br>
+Example:</p>
+
+<pre><code>A = "World"
+PRINT "Hello "; A
+PRINT "A sentence within "; CONTINUE
+PRINT "the same line."
+</code></pre>
+
+<h3>PUTCHAR</h3>
+
+<p>Usage:</p>
+
+<pre><code>PUTCHAR "c"
+PUTCHAR expression
+</code></pre>
+
+<p>Fast way (5x faster than PRINT "c") to output a single character to video buffer at current cursor position. It can be either a string literal <em>c</em>
+in double quotes, or a math expression (which could be a single number) returning character ascii code.</p>
+
+<h3>LOCATE</h3>
+
+<p>Usage:</p>
+
+<pre><code>LOCATE Y[, X]
+</code></pre>
+
+<p>Sets current cursor location to <em>X</em>, <em>Y</em>. Set's only <em>Y</em> if <em>X</em> is not provided.</p>
+
+<h3>COLOR</h3>
+
+<p>Usage:</p>
+
+<pre><code>COLOR FOREGROUND, BACKGROUND
+</code></pre>
+
+<p>Sets current output color to <em>FOREGROUND</em> and <em>BACKGROUND</em>. Both these values can be 0 to 15.</p>
+
+<h3>KEY</h3>
+
+<p>Usage:</p>
+
+<pre><code>DIM Code
+Code = KEY 
+</code></pre>
+
+<p>Used in an expression, it returns character code of last pressed key.</p>
+
+<h3>STR</h3>
+
+<p>Usage:</p>
+
+<pre><code>DIM Char
+Char = STR(expression)
+</code></pre>
+
+<p>Returns an ASCII character from given character code.</p>
+
+<h3>CHR</h3>
+
+<p>Usage:</p>
+
+<pre><code>DIM Code
+Code = STR(expression)
+</code></pre>
+
+<p>Returns a character code from first character of an ASCII string (opposite to STR)</p>
+
+<h3>INPUT</h3>
+
+<p>Usage:</p>
+
+<pre><code>DIM YourName
+YourName = INPUT
+</code></pre>
+
+<p>Waits for user to enter a string followed by ENTER key, and returns this string as expression. User input is displayed on the screen.</p>
+
+<h3>PEEK</h3>
+
+<p>Usage:</p>
+
+<pre><code>DIM MemoryValue
+MemoryValue = PEEK(address)
+</code></pre>
+
+<p>Reads directly the memory and returns a number representing word at given memory <em>address</em>.</p>
+
+<h3>POKE</h3>
+
+<p>Usage:</p>
+
+<pre><code>POKE address, value
+</code></pre>
+
+<p>Writes directly to memory, sets word at <em>address</em> to given <em>value</em>.</p>
+
+<h3>END</h3>
+
+<p>Program MUST end with an <code>END</code> statement.</p>
+
+<h2>Demos</h2>
+
+<p>You can browse sample/ directory for sample .bas source files, as well as output/ directory for compiled .s (assembly) files of these samples. There are couple of web-based emulators that you can try these with, most notable: <a href="http://denull.ru/dcpu/dcpu.htm">deNULL's</a>.</p>
+
+<h2>Licence</h2>
+
+<p>This code is licenced on the terms of the <a href="http://www.opensource.org/licenses/mit-license.php">MIT Licence</a>.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-30762132-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
