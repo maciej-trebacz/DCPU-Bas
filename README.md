@@ -14,6 +14,17 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 * Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT, POKE
 * Functions: STR, CHR, PEEK
 
+## How to get it.
+
+Easiest way is to get the binaries from the [downloads section](https://github.com/M4v3R/DCPU-Bas/downloads).  
+You can also build it from the latest sources. In that case, you need to:
+
+* Get and setup [Go](http://golang.org/doc/install)
+* Get the [latest sources](https://github.com/M4v3R/DCPU-Bas/zipball/master) and unpack them to a directory
+* On the command line, within that directory, type: ```go build```
+
+That should do it.
+
 ## Language documentation
 
 Below are language statements and functions explained:
