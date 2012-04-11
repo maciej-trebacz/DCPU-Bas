@@ -14,6 +14,22 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 * Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT, POKE
 * Functions: STR, CHR, PEEK
 
+## How the language looks like
+
+Here's a sample program (you can find it in samples/input.bas) that asks for your name and then displays it back to you:
+
+```
+DIM MyName
+
+PRINT "Enter your name: "; CONTINUE
+MyName = INPUT
+
+PRINT " "
+PRINT "Hello, "; MyName; "!"
+
+END
+```
+
 ## How to get it.
 
 Easiest way is to get the binaries from the [downloads section](https://github.com/M4v3R/DCPU-Bas/downloads).  
