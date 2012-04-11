@@ -6,6 +6,7 @@
 	SET A, SP
 	SET PUSH, A
 	SET Y, 0x7000
+	SET Z, 0x9000
 	SUB SP, 2 ; Alloc space on stack
 	SET A, 0x1
 	SET [0xffff], A
@@ -13,65 +14,33 @@
 	SET [0xfffe], A
 	:l0
 	SET A, [0xfffe]
-	SET [0xffff], A
-	SET A, [0xffff]
 	SET PUSH, A
-	SET A, [0xffff]
-	SET PUSH, A
-	SET A, [0xffff]
+	SET A, [0xfffe]
 	MUL A, POP
 	SET PUSH, A
-	SET A, 0x3d73
-	MUL A, POP
-	SET PUSH, A
-	SET A, 0xc0ae5
+	SET A, 0x4d2
 	ADD A, POP
-	MUL A, POP
-	SET PUSH, A
-	SET A, 0x5208dd0d
-	ADD A, POP
-	SET PUSH, A
-	SET A, 0x14ad
-	SET B, POP
-	DIV B, A
-	SET A, B
-	SET PUSH, A
-	SET A, 0x3
-	SET B, POP
-	MOD B, A
-	SET A, B
 	SET [0xffff], A
 	SET A, [0xfffe]
 	SET PUSH, A
 	SET A, 0x1
 	ADD A, POP
 	SET [0xfffe], A
-	SET A, [0xffff]
+	SET A, 0x8000
 	SET PUSH, A
-	SET A, 0x2
+	SET A, [0xfffe]
+	SET PUSH, A
+	SET A, 0x200
 	SET B, POP
-	SET C, 1
-	IFE A, B
-	SET C, 0
-	IFN C, 0
-	SET PC, l2
-	SET A, 0x8
-	SET [0xffff], A
-	:l2
-	SET A, 0x1
-	SET Y, 0
-	SHL A, 12
-	BOR Y, A
+	MOD B, A
+	SET A, B
+	ADD A, POP
+	SET B, A
 	SET A, [0xffff]
 	SET PUSH, A
-	SET A, 0x7
-	ADD A, POP
-	SHL A, 8
-	BOR Y, A
-	SET [0x8000+X], 32
-	BOR [0x8000+X], Y
-	ADD X, 1
-	AND X, 0x1ff
+	SET A, 0xff00
+	AND A, POP
+	SET [B], A
 	SET PC, l0
 	:l1
 	SET J, POP
@@ -85,8 +54,12 @@
 	
 	; compiled functions
 	:getkey
-	SET A, [0x9000]
-	SET [0x9000], 0
+	IFE [Z], 0
+	SET PC, POP
+	SET A, [Z]
+	SET [Z], 0
+	ADD Z, 1
+	AND Z, 0x900f
 	SET PC, POP
 	:strlen
 	SET I, A
@@ -149,7 +122,4 @@
 	JSR printstr
 	SET PC, POP
 	:end
-	IFN SP, 0
-	SET PC, POP
-	:halt
-	SET PC, halt
+	SET PC, end

@@ -6,6 +6,7 @@
 	SET A, SP
 	SET PUSH, A
 	SET Y, 0x7000
+	SET Z, 0x9000
 	SUB SP, 1 ; Alloc space on stack
 	ADD PC, 18
 	:c0 DAT "Enter your name: ", 0
@@ -16,13 +17,22 @@
 	SET I, SP
 	SUB I, 1
 	:input
-	IFE [0x9000], 0
-	SET PC, input
+	SET A, 0
 	JSR getkey
+	IFE A, 0
+	SET PC, input
 	IFE A, 0xa
 	SET PC, input2
+	IFE A, 0x8
+	SET PC, inputbsp
 	SET PUSH, A
 	JSR printchar
+	SET PC, input
+	:inputbsp
+	SET POP, 0
+	SUB X, 1
+	SET [0x8000+X], 0
+	BOR [0x8000+X], Y
 	SET PC, input
 	:input2
 	SET B, SP
@@ -70,8 +80,12 @@
 	
 	; compiled functions
 	:getkey
-	SET A, [0x9000]
-	SET [0x9000], 0
+	IFE [Z], 0
+	SET PC, POP
+	SET A, [Z]
+	SET [Z], 0
+	ADD Z, 1
+	AND Z, 0x900f
 	SET PC, POP
 	:strlen
 	SET I, A
@@ -134,7 +148,4 @@
 	JSR printstr
 	SET PC, POP
 	:end
-	IFN SP, 0
-	SET PC, POP
-	:halt
-	SET PC, halt
+	SET PC, end

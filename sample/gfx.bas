@@ -4,12 +4,9 @@ X = 1
 I = 1
 
 LOOP 
-	X = I
-	X = (X * (X * X * 15731 + 789221) + 1376312589) / 5293 % 3
+	X = (I * I + 1234)
 	I = I + 1
-	IF X == 2 THEN X = 8 END IF
-	COLOR 1, X + 7
-	PUTCHAR " "
+	POKE 32768 + (I % 512), X & 65280
 END LOOP
 
 END
