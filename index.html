@@ -56,7 +56,24 @@ Compiler structure and engine is heavily inspired by <a href="http://compilers.i
 <li>Variables (both integer and string)</li>
 <li>Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT, POKE</li>
 <li>Functions: STR, CHR, PEEK</li>
-</ul><h2>How to get it.</h2>
+</ul>
+
+<h2>How 0xBASIC looks like</h2>
+
+<p>Here's a sample program (you can find it in samples/input.bas) that asks for your name and then displays it back to you:</p>
+
+<pre><code>DIM MyName
+
+PRINT "Enter your name: "; CONTINUE
+MyName = INPUT
+
+PRINT " "
+PRINT "Hello, "; MyName; "!"
+
+END
+</code></pre>
+
+<h2>How to get it.</h2>
 
 <p>Easiest way is to get the binaries from the <a href="https://github.com/M4v3R/DCPU-Bas/downloads">downloads section</a>.<br>
 You can also build it from the latest sources. In that case, you need to:</p>
