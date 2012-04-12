@@ -11,7 +11,7 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 * Relational operators: == <> < > <= >=
 * Control structures: IF, LOOP
 * Variables (both integer and string)
-* Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT, POKE
+* Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT, POKE, GOTO, RND
 * Functions: STR, CHR, PEEK
 
 ## How the language looks like
@@ -197,6 +197,36 @@ POKE address, value
 ```
 
 Writes directly to memory, sets word at _address_ to given _value_.
+
+### GOTO
+
+Usage:
+
+```
+:label
+GOTO label
+```
+
+An unconditional jump into another place in the program code, defined by a _label_.  
+Label definitions must start with a colon (:).  
+_Use it with caution_, there are no checks performed, so you can break your code easily by abusing this statement.
+For example, nothing will prevent you to jump right into a LOOP or IF structure, but it can have unpredictable results.
+
+### RND
+
+Usage:
+
+```
+DIM RandomValue
+RandomValue = RND
+```
+
+Generates a pseudo-random 16-bit integer (from 0 to 65535).  
+To get a number from a specific range, use modulo division: ```RandomValue = RND % 100 + 1``` gives you a number from 1 to 100.  
+*Note:* Every program always starts with the same seed, meaning that it will have a same set of random numbers generated. 
+To update the seed randomly, use user's keyboard input - ask for something using INPUT statement, or wait for a keypress using KEY statement.
+These statements update the generator seed by multiplying it with amount of time that has passed before a keystroke, which should be random enough.
+Credit: Linear congruentrial generator used by this statement is coded by [Entroper](https://github.com/Entroper/DCPU-16-PRNGs).
 
 ### END
 
