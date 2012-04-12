@@ -179,6 +179,13 @@ func BranchFalse(s string) {
 }
 
 func Prolog() {
+	EmitLine("ADD PC, 3")
+	EmitLine(":rnd1")
+	EmitLine("DAT 0x6769")
+	EmitLine(":rnd2")
+	EmitLine("DAT 0x1250")
+	EmitLine(":timer")
+	EmitLine("DAT 0")
 	EmitLine("SET PUSH, X")
 	EmitLine("SET PUSH, Y")
 	EmitLine("SET PUSH, Z")
@@ -188,6 +195,10 @@ func Prolog() {
 	EmitLine("SET PUSH, A")
 	EmitLine("SET Y, 0x7000") // Set color to white
 	EmitLine("SET Z, 0x9000") // Key pointer
+}
+
+func Rnd() { // Credits for this function go to Entroper (github.com/Entroper)
+	Call("rand")
 }
 
 func Ret() {
@@ -261,6 +272,13 @@ func PutChar() {
 	EmitLine("AND X, 0x1ff")
 }
 
+func Goto() {
+	Next()
+	Token = '$'
+	Branch(Value)
+	Next()
+}
+
 func Input() {
 	EmitLine("SET PUSH, 0x0")
 	EmitLine("SET I, SP")
@@ -302,12 +320,15 @@ func Input() {
 
 func Lib() {
 	PostLabel("getkey") // Get key press
+	EmitLine("ADD [timer], 1") // Increase "timer"
 	EmitLine("IFE [Z], 0")
 	Ret()
-	EmitLine("SET A, [Z]")
+	EmitLine("SET A, [Z]") // Get key code
 	EmitLine("SET [Z], 0")
 	EmitLine("ADD Z, 1")
-	EmitLine("AND Z, 0x900f")
+	EmitLine("AND Z, 0x900f") // Make sure the pointer is circular
+	EmitLine("MUL [rnd1], [timer]")
+	EmitLine("ADD [rnd2], O")
 	Ret()
 
 	PostLabel("strlen") // gets string length
@@ -374,6 +395,20 @@ func Lib() {
 	EmitLine("JSR printint")
 	EmitLine("IFE B, 1") // String
 	EmitLine("JSR printstr")
+	Ret()
+
+	PostLabel("rand")
+	EmitLine("SET B, [rnd1]")
+	EmitLine("SET A, [rnd2]")
+	EmitLine("MUL [rnd1], 0x660D")
+	EmitLine("SET C, O")
+	EmitLine("MUL A, 0x660D")
+	EmitLine("ADD A, C")
+	EmitLine("MUL B, 0x0019")
+	EmitLine("ADD A, B")
+	EmitLine("ADD [rnd1], 1")
+	EmitLine("ADD A, O")
+	EmitLine("SET [rnd2], A")
 	Ret()
 }
 

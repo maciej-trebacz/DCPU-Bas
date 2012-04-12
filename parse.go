@@ -16,8 +16,8 @@ import (
 
 var data *os.File
 var Look, Prev byte
-var Keywords = []string { "IF", "ELSE",  "LOOP", "END", "DIM", "CLS", "PRINT", "LOCATE", "REM", "COLOR", "POKE", "PUTCHAR" }
-var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o', 'r', 'k', 'q', 'u' }
+var Keywords = []string { "IF", "ELSE",  "LOOP", "END", "DIM", "CLS", "PRINT", "LOCATE", "REM", "COLOR", "POKE", "PUTCHAR", "GOTO" }
+var Tokens = []byte { 'x', 'i', 'l', 'w', 'e', 'd', 'c', 'p', 'o', 'r', 'k', 'q', 'u', 'g', 'n' }
 var Token byte
 var Value string
 var LabelCount = 0
@@ -216,8 +216,15 @@ func GetName() {
 			break
 		}
 	}
-	Token = 'x'
-	Value = string(token.Bytes())
+
+	if (Look == ':') {
+		PostLabel(string(token.Bytes()))
+		GetChar()
+		Next()
+	} else {
+		Token = 'x'
+		Value = string(token.Bytes())
+	}
 }
 
 func GetNum() {
@@ -442,6 +449,8 @@ func Factor() {
 			FuncChr()
 		} else if Value == "PEEK" {
 			FuncPeek()
+		} else if Value == "RND" {
+			Rnd()
 		} else if Token == 'x' {
 			LoadVar(Value)
 		} else if Token == '#' {
@@ -646,6 +655,11 @@ func Block() {
 			Poke()
 		case 'u':
 			PutChar()
+		case 'g':
+			Goto()
+		case 'n':
+			Rnd()
+
 		default:
 			Assignment()
 		}

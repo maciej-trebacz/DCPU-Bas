@@ -29,6 +29,7 @@ func FuncChr() {
 	Next()
 	MatchString("(")
 	BoolExpression()
+	EmitLine("IFG 0xF000, A") // Check if it's not a stack pointer
 	EmitLine("AND A, 0x7fff")
 	EmitLine("SET PUSH, [A]")
 	EmitLine("SET A, POP")
