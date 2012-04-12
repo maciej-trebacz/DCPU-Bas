@@ -12,7 +12,7 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 * Control structures: IF, LOOP
 * Variables (both integer and string)
 * Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT, POKE, GOTO, RND
-* Functions: STR, CHR, PEEK
+* Functions: STR, CHR, VAL, PEEK
 
 ## How the language looks like
 
@@ -165,6 +165,17 @@ Code = STR(expression)
 ```
 
 Returns a character code from first character of an ASCII string (opposite to STR)
+
+### VAL
+
+Usage:
+
+```
+DIM Number
+Number = VAL(expression)
+```
+
+Returns an integer representation of a number in string variable (e.g. input from user)
 
 ### INPUT
 
