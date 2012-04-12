@@ -14,10 +14,11 @@
 	SET PUSH, A
 	SET Y, 0x7000
 	SET Z, 0x9000
-	SUB SP, 3 ; Alloc space on stack
+	SUB SP, 4 ; Alloc space on stack
 	SET A, 0x0
 	SET [0xffff], A
 	SET A, 0x0
+	:BEGIN
 	SET [0xfffd], A
 	ADD PC, 28
 	:c0 DAT "I imagined a number between", 0
@@ -25,8 +26,8 @@
 	BOR A, 0x8000
 	JSR print
 	JSR printnl
-	ADD PC, 26
-	:c1 DAT "1 and 9. Try to guess it!", 0
+	ADD PC, 28
+	:c1 DAT "1 and 100. Try to guess it!", 0
 	SET A, c1
 	BOR A, 0x8000
 	JSR print
@@ -38,57 +39,13 @@
 	JSR print
 	JSR printnl
 	:START
-	ADD PC, 22
-	:c3 DAT "Pick a number [1-9]: ", 0
+	ADD PC, 24
+	:c3 DAT "Pick a number [1-100]: ", 0
 	SET A, c3
 	BOR A, 0x8000
 	JSR print
-	SET PUSH, 0x0
-	SET I, SP
-	SUB I, 1
-	:input
-	SET A, 0
-	JSR getkey
-	IFE A, 0
-	SET PC, input
-	IFE A, 0xa
-	SET PC, input2
-	IFE A, 0x8
-	SET PC, inputbsp
-	SET PUSH, A
-	JSR printchar
-	SET PC, input
-	:inputbsp
-	SET POP, 0
-	SUB X, 1
-	SET [0x8000+X], 0
-	BOR [0x8000+X], Y
-	SET PC, input
-	:input2
-	SET B, SP
-	SET J, B
-	:input3
-	SET A, [B]
-	SET [B], [I]
-	SET [I], A
-	ADD B, 1
-	SUB I, 1
-	IFG B, I
-	SET PC, input4
-	SET PC, input3
-	:input4
-	SET A, J
-	BOR A, 0x8000
-	IFG 0xF000, A
-	AND A, 0x7fff
-	SET PUSH, [A]
-	SET A, POP
-	SET PUSH, A
-	SET A, 0x30
-	SUB A, POP
-	SET PUSH, A
-	SET A, 0
-	SUB A, POP
+	JSR input
+	JSR atoi
 	SET [0xfffe], A
 	SET A, [0xfffd]
 	SET PUSH, A
@@ -113,7 +70,7 @@
 	SET PC, l1
 	JSR rand
 	SET PUSH, A
-	SET A, 0x9
+	SET A, 0x64
 	SET B, POP
 	MOD B, A
 	SET A, B
@@ -179,6 +136,60 @@
 	ADD PC, 10
 	:c9 DAT " time(s).", 0
 	SET A, c9
+	BOR A, 0x8000
+	JSR print
+	JSR printnl
+	ADD PC, 2
+	:c10 DAT " ", 0
+	SET A, c10
+	BOR A, 0x8000
+	JSR print
+	JSR printnl
+	ADD PC, 33
+	:c11 DAT "Do you want to play again? (y/n)", 0
+	SET A, c11
+	BOR A, 0x8000
+	JSR print
+	JSR printnl
+	SET A, 0x0
+	SET [0xfffc], A
+	:l4
+	SET A, [0xfffc]
+	SET PUSH, A
+	SET A, 0x0
+	SET B, POP
+	SET C, 1
+	IFE A, B
+	SET C, 0
+	IFN C, 0
+	SET PC, l5
+	JSR getkey
+	SET [0xfffc], A
+	SET PC, l4
+	:l5
+	SET A, [0xfffc]
+	SET PUSH, A
+	SET A, 0x79
+	SET B, POP
+	SET C, 1
+	IFE A, B
+	SET C, 0
+	IFN C, 0
+	SET PC, l6
+	SET A, 0x0
+	SET [0xffff], A
+	SET I, 0x8220
+	:l7
+	SUB I, 1
+	SET [I], 0
+	IFN I, 0x8000
+	SET PC, l7
+	SET X, 0
+	SET PC, BEGIN
+	:l6
+	ADD PC, 20
+	:c12 DAT "Thanks for playing!", 0
+	SET A, c12
 	BOR A, 0x8000
 	JSR print
 	JSR printnl
@@ -262,6 +273,64 @@
 	JSR printint
 	IFE B, 1
 	JSR printstr
+	SET PC, POP
+	:input
+	SET C, SP
+	SET PUSH, 0x0
+	SET I, SP
+	SUB I, 1
+	:input1
+	SET A, 0
+	JSR getkey
+	IFE A, 0
+	SET PC, input1
+	IFE A, 0xa
+	SET PC, input2
+	IFE A, 0x8
+	SET PC, inputbsp
+	SET PUSH, A
+	JSR printchar
+	SET PC, input1
+	:inputbsp
+	SET POP, 0
+	SUB X, 1
+	SET [0x8000+X], 0
+	BOR [0x8000+X], Y
+	SET PC, input1
+	:input2
+	SET B, SP
+	SET J, B
+	:input3
+	SET A, [B]
+	SET [B], [I]
+	SET [I], A
+	ADD B, 1
+	SUB I, 1
+	IFG B, I
+	SET PC, input4
+	SET PC, input3
+	:input4
+	SET A, J
+	BOR A, 0x8000
+	SET PC, [C]
+	:atoi
+	IFE [A], 0
+	SET PC, atoi2
+	SET C, 0
+	:atoi1
+	IFG [A], 47
+	IFG [A], 57
+	SET PC, atoi2
+	MUL C, 10
+	SET B, [A]
+	SUB B, 48
+	ADD C, B
+	ADD A, 1
+	IFE [A], 0
+	SET PC, atoi2
+	SET PC, atoi1
+	:atoi2
+	SET A, C
 	SET PC, POP
 	:rand
 	SET B, [rnd1]
