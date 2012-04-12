@@ -35,6 +35,13 @@ func FuncChr() {
 	EmitLine("SET A, POP")
 }
 
+func FuncVal() {
+	Next()
+	MatchString("(")
+	BoolExpression()
+	Call("atoi")
+}
+
 func FuncPeek() {
 	Next()
 	MatchString("(")

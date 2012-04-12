@@ -447,6 +447,8 @@ func Factor() {
 			FuncStr()
 		} else if Value == "CHR" {
 			FuncChr()
+		} else if Value == "VAL" {
+			FuncVal()
 		} else if Value == "PEEK" {
 			FuncPeek()
 		} else if Value == "RND" {
