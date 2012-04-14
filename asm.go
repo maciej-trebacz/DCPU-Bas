@@ -131,11 +131,17 @@ func PopCompare() {
 }
 
 func SetEqual() {
+	EmitLine("IFG 0x8000, A")
+	EmitLine("IFG B, 0x7fff")
+	Call("comparestr")
 	EmitLine("IFE A, B")
 	EmitLine("SET C, 0")
 }
 
 func SetNotEqual() {
+	EmitLine("IFG 0x8000, A")
+	EmitLine("IFG B, 0x7fff")
+	Call("comparestr")
 	EmitLine("IFN A, B")
 	EmitLine("SET C, 0")
 }
@@ -401,6 +407,28 @@ func Lib() {
 	EmitLine("SET A, J")
 	EmitLine("BOR A, 0x8000")
 	EmitLine("SET PC, [C]")
+	PostLabel("comparestr")
+	EmitLine("SET I, POP") // adjust return address to bypass int cmp
+	EmitLine("ADD I, 2")
+	EmitLine("SET PUSH, I")
+	EmitLine("IFG 0xF000, A")
+	EmitLine("AND A, 0x7fff")
+	EmitLine("IFG 0xF000, B")
+	EmitLine("AND B, 0x7fff")
+	EmitLine("SET I, 0")
+	EmitLine("SET C, 0")
+	PostLabel("comparestr1")
+	EmitLine("IFN [A], [B]")
+	Branch("comparestr2")
+	EmitLine("IFN [A], 0")
+	EmitLine("IFE [B], 0")
+	EmitLine("SET PC, POP")
+	EmitLine("ADD A, 1")
+	EmitLine("ADD B, 1")
+	Branch("comparestr1")
+    PostLabel("comparestr2")
+	EmitLine("SET C, 1")
+    Ret()
 
 	PostLabel("atoi")
 	EmitLine("IFE [A], 0")

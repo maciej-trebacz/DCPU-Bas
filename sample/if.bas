@@ -1,40 +1,74 @@
-DIM A, B, C
+DIM A, B, C, D, I
 
 A = 1
 B = 2
+C = "HELLO"
+D = "WORLD"
+
+PRINT "A: "; A
+PRINT "B: "; B
+PRINT "C: "; C
+PRINT "D: "; D
+PRINT " "
+
+REM Print a separator
+I = 1
+LOOP WHILE I < 9
+	LOCATE I, 10
+	PRINT "|"
+	I = I + 1
+END LOOP
 
 IF A == B THEN
-	PRINT 1
+	PRINT "A == B"
 END IF
 
-LOCATE 2
+LOCATE 1, 12
 
 IF A <> B THEN
-	PRINT 2
+	PRINT "A <> B"
 END IF
 
-LOCATE 3
+LOCATE 2, 12
 
 IF A > B THEN
-	PRINT 3
+	PRINT "A > B"
 END IF
 
-LOCATE 4
+LOCATE 3, 12
 
 IF A < B THEN
-	PRINT 4
+	PRINT "A < B"
 END IF
 
-LOCATE 5
+LOCATE 4, 12
 
 IF A >= B THEN
-	PRINT 5
+	PRINT "A >= B"
 END IF
 
-LOCATE 6
+LOCATE 5, 12
 
 IF A <= B THEN
-	PRINT 6
+	PRINT "A <= B"
+END IF
+
+LOCATE 6, 12
+
+IF C == D THEN
+	PRINT "C == D"
+END IF
+
+LOCATE 7, 12
+
+IF C == "HELLO" THEN
+	PRINT "C == 'HELLO'"
+END IF
+
+LOCATE 8, 12
+
+IF D == "HELLO" THEN
+	PRINT "D == 'HELLO'"
 END IF
 
 END
