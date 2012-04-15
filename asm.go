@@ -354,9 +354,9 @@ func Lib() {
 	EmitLine("SET PC, printstr1") // Loop
 
 	PostLabel("printnl") // Print new line
-	EmitLine("DIV X, 32")
+	EmitLine("SHR X, 5")
 	EmitLine("ADD X, 1")
-	EmitLine("MUL X, 32")
+	EmitLine("SHL X, 5")
 	Ret()
 
 	PostLabel("print")
