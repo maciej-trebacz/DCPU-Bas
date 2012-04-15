@@ -12,7 +12,7 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 * Control structures: IF, LOOP
 * Variables (both integer and string)
 * Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT, POKE, GOTO, RND
-* Functions: STR, CHR, VAL, PEEK
+* Functions: STR, CHR, VAL, PEEK, SQR
 
 ## How the language looks like
 
@@ -238,6 +238,17 @@ To get a number from a specific range, use modulo division: ```RandomValue = RND
 To update the seed randomly, use user's keyboard input - ask for something using INPUT statement, or wait for a keypress using KEY statement.
 These statements update the generator seed by multiplying it with amount of time that has passed before a keystroke, which should be random enough.
 Credit: Linear congruentrial generator used by this statement is coded by [Entroper](https://github.com/Entroper/DCPU-16-PRNGs).
+
+### SQR
+
+Usage:
+
+```
+DIM Result
+Result = SQR(expression)
+```
+
+Computes square root of _expression_.
 
 ### END
 
