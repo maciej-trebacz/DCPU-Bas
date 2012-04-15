@@ -29,7 +29,7 @@
 	ADD B, 1 ; increment char address
 	SET PC, strlen1
 
-    ; prints a single character on the screen
+	; prints a single character on the screen
 	; A - character code
 	; X - location on the terminal
 	; Y - color/style mask

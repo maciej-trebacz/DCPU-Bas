@@ -23,6 +23,8 @@ var Value string
 var LabelCount = 0
 var ConstCount = 0
 var StackDepth = 0
+var LineNumber = 1
+var EOF = false
 var Line = bytes.NewBufferString("")
 
 type Symbol struct {
@@ -34,13 +36,16 @@ type Symbol struct {
 var Symbols = make([]Symbol, 100)
 
 func Abort(errorString string) {
-	Error(errorString)
-	fmt.Printf("\nCurrent token type: %c, look: %c, value: '%s'\n\n", Token, Look, Value)
-	panic("")
+	Error(fmt.Sprintf("%s (on line %d)", errorString, LineNumber))
+	os.Exit(1)
 }
 
 func Expected(s string) {
-	Abort(fmt.Sprintf("%s expected", s))
+	if EOF == false {
+		Abort(fmt.Sprintf("%s expected", s))
+	} else {
+		Abort("END expected")
+	}
 }
 
 func Undefined(s string) {
@@ -55,6 +60,7 @@ func Read() byte {
 	bytes := make([]byte, 1)
 	count, _ := data.Read(bytes)
 	if count == 0 {
+		EOF = true;
 		return 0
 	}
 	return bytes[0]
@@ -63,6 +69,9 @@ func Read() byte {
 func GetChar() {
 	Prev = Look
 	Look = Read()
+	if Look == '\n' {
+		LineNumber++
+	}
 	/* Debug: show basic lines in comments
 	fmt.Fprintf(Line, "%c", Look)
 	if Look == '\n' {
