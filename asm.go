@@ -9,6 +9,9 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"bufio"
+	"io/ioutil"
 	"strconv"
 )
 
@@ -203,7 +206,7 @@ func Prolog() {
 	EmitLine("SET Z, 0x9000") // Key pointer
 }
 
-func Rnd() { // Credits for this function go to Entroper (github.com/Entroper)
+func Rnd() {
 	Call("rand")
 }
 
@@ -290,179 +293,18 @@ func Input() {
 }
 
 func Lib() {
-	PostLabel("getkey") // Get key press
-	EmitLine("ADD [timer], 1") // Increase "timer"
-	EmitLine("IFE [Z], 0")
-	Ret()
-	EmitLine("SET A, [Z]") // Get key code
-	EmitLine("SET [Z], 0")
-	EmitLine("ADD Z, 1")
-	EmitLine("AND Z, 0x900f") // Make sure the pointer is circular
-	EmitLine("MUL [rnd1], [timer]")
-	EmitLine("ADD [rnd2], O")
-	Ret()
+	var error error
+	var file *os.File
 
-	PostLabel("strlen") // gets string length
-	EmitLine("SET I, A")
-	PostLabel("strlen1")
-	EmitLine("ADD I, 1")
-	EmitLine("IFN [I], 0x0")
-	Branch("strlen1")
-	EmitLine("SET A, B")
-	Ret()
-
-	PostLabel("printchar") // Print char
-	EmitLine("SET [0x8000+X], A") // Print char at cursor position
-	EmitLine("BOR [0x8000+X], Y") // Apply color style
-	EmitLine("ADD X, 1") // Increment cursor position
-	EmitLine("IFG X, 0x21f") // Check if we should do next line (X > 32)
-	EmitLine("SET X, 0") // First row, first column
-	PostLabel("pnline")
-	Ret()
-
-	PostLabel("printint") // Print integer
-	EmitLine("SET I, 0") // Loop counter
-	PostLabel("printint1") // Loop: divide A by 10 until 0 is left
-	EmitLine("SET B, A") // Store A (number) for later
-	EmitLine("MOD A, 0xa") // Get remainder from division by 10
-	EmitLine("ADD A, 0x30") // Add 0x30 to the remainder to get ASCII code
-	EmitLine("SET PUSH, A") // Store the remainder (digit) on the stack
-	EmitLine("SET A, B") // Get A (number) back
-	EmitLine("DIV A, 0xa") // Divide the number by 10
-	EmitLine("ADD I, 1") // Increment loop counter
-	EmitLine("IFN A, 0") // A > 10: jump
-	EmitLine("SET PC, printint1")
-	PostLabel("printint2") // Loop: print character by character
-	EmitLine("SET A, POP") // Get digit from stack
-	EmitLine("JSR printchar") // Print character
-	EmitLine("SUB I, 1") // Decrement loop counter
-	EmitLine("IFN I, 0")
-	EmitLine("SET PC, printint2") // Jump back if there are more chars
-	EmitLine("SET A, POP")
-	Ret()
-
-	PostLabel("printstr") // Print string
-	EmitLine("IFG 0xF000, A") // Check if it's not a stack pointer
-	EmitLine("AND A, 0x7fff")
-	EmitLine("SET I, A") // Get string address
-	PostLabel("printstr1")
-	EmitLine("IFE [I], 0") // Return if we've reached end of string
-	Ret()
-	EmitLine("SET A, [I]") // Set A to address of next char
-	EmitLine("JSR printchar") // Print char
-	EmitLine("ADD I, 1") // Increment char index
-	EmitLine("SET PC, printstr1") // Loop
-
-	PostLabel("printnl") // Print new line
-	EmitLine("SHR X, 5")
-	EmitLine("ADD X, 1")
-	EmitLine("SHL X, 5")
-	Ret()
-
-	PostLabel("print")
-	EmitLine("SET B, A") // Check variable type
-	EmitLine("SHR B, 15")
-	EmitLine("IFE B, 0") // Integer
-	EmitLine("JSR printint")
-	EmitLine("IFE B, 1") // String
-	EmitLine("JSR printstr")
-	Ret()
-
-	PostLabel("input")
-	EmitLine("SET C, SP")
-	EmitLine("SET PUSH, 0x0")
-	EmitLine("SET I, SP")
-	EmitLine("SUB I, 1")
-	PostLabel("input1")
-	EmitLine("SET A, 0")
-	Call("getkey")
-	EmitLine("IFE A, 0")
-	EmitLine("SET PC, input1")
-	EmitLine("IFE A, 0xa")
-	EmitLine("SET PC, input2")
-	EmitLine("IFE A, 0x8")
-	EmitLine("SET PC, inputbsp")
-	EmitLine("SET PUSH, A")
-	Call("printchar")
-	EmitLine("SET PC, input1")
-	PostLabel("inputbsp")
-	EmitLine("SET POP, 0")
-	EmitLine("SUB X, 1")
-	EmitLine("SET [0x8000+X], 0")
-	EmitLine("BOR [0x8000+X], Y")
-	EmitLine("SET PC, input1")
-	PostLabel("input2")
-	EmitLine("SET B, SP")
-	EmitLine("SET J, B")
-	PostLabel("input3")
-	EmitLine("SET A, [B]")
-	EmitLine("SET [B], [I]")
-	EmitLine("SET [I], A")
-	EmitLine("ADD B, 1")
-	EmitLine("SUB I, 1")
-	EmitLine("IFG B, I")
-	EmitLine("SET PC, input4")
-	EmitLine("SET PC, input3")
-	PostLabel("input4")
-	EmitLine("SET A, J")
-	EmitLine("BOR A, 0x8000")
-	EmitLine("SET PC, [C]")
-	PostLabel("comparestr")
-	EmitLine("SET I, POP") // adjust return address to bypass int cmp
-	EmitLine("ADD I, 2")
-	EmitLine("SET PUSH, I")
-	EmitLine("IFG 0xF000, A")
-	EmitLine("AND A, 0x7fff")
-	EmitLine("IFG 0xF000, B")
-	EmitLine("AND B, 0x7fff")
-	EmitLine("SET I, 0")
-	EmitLine("SET C, 0")
-	PostLabel("comparestr1")
-	EmitLine("IFN [A], [B]")
-	Branch("comparestr2")
-	EmitLine("IFN [A], 0")
-	EmitLine("IFE [B], 0")
-	EmitLine("SET PC, POP")
-	EmitLine("ADD A, 1")
-	EmitLine("ADD B, 1")
-	Branch("comparestr1")
-    PostLabel("comparestr2")
-	EmitLine("SET C, 1")
-    Ret()
-
-	PostLabel("atoi")
-	EmitLine("IFE [A], 0")
-	Branch("atoi2")
-	EmitLine("SET C, 0")
-	PostLabel("atoi1")
-	EmitLine("IFG [A], 47") // Check if character is a digit
-	EmitLine("IFG [A], 57")
-	Branch("atoi2")
-	EmitLine("MUL C, 10")
-	EmitLine("SET B, [A]")
-	EmitLine("SUB B, 48")
-	EmitLine("ADD C, B")
-	EmitLine("ADD A, 1")
-	EmitLine("IFE [A], 0")
-	Branch("atoi2")
-	Branch("atoi1")
-	PostLabel("atoi2")
-	EmitLine("SET A, C")
-	Ret()
-
-	PostLabel("rand")
-	EmitLine("SET B, [rnd1]")
-	EmitLine("SET A, [rnd2]")
-	EmitLine("MUL [rnd1], 0x660D")
-	EmitLine("SET C, O")
-	EmitLine("MUL A, 0x660D")
-	EmitLine("ADD A, C")
-	EmitLine("MUL B, 0x0019")
-	EmitLine("ADD A, B")
-	EmitLine("ADD [rnd1], 1")
-	EmitLine("ADD A, O")
-	EmitLine("SET [rnd2], A")
-	Ret()
+	EmitLine("")
+	EmitLine("; lib.dasm - compiler library")
+	file, error = os.Open("lib.dasm")
+	if error != nil {
+		Error("Couldn't open 'lib.dasm' library file!")
+	}
+	reader := bufio.NewReader(file)
+	bytes, _ := ioutil.ReadAll(reader)
+	fmt.Printf("%s", bytes)
 }
 
 func Epilog() {
@@ -474,12 +316,5 @@ func Epilog() {
 	EmitLine("SET A, POP")
 	EmitLine("SET SP, A")
 	EmitLine("SET PC, end")
-	EmitLine("")
-	EmitLine("; compiled functions")
 	Lib()
-	PostLabel("end")
-//	EmitLine("IFN SP, 0")
-//	EmitLine("SET PC, POP")
-//	PostLabel("halt")
-	EmitLine("SET PC, end")
 }
