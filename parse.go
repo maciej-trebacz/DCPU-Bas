@@ -453,6 +453,8 @@ func Factor() {
 			FuncPeek()
 		} else if Value == "RND" {
 			Rnd()
+		} else if Value == "SQR" {
+			FuncSqr()
 		} else if Token == 'x' {
 			LoadVar(Value)
 		} else if Token == '#' {

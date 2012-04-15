@@ -49,3 +49,11 @@ func FuncPeek() {
 	EmitLine("SET B, [A]")
 	EmitLine("SET A, B")
 }
+
+func FuncSqr() {
+	Next()
+	MatchString("(")
+	BoolExpression()
+	Call("sqrt")
+}
+

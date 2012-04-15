@@ -188,9 +188,45 @@
 	SET A, C
 	SET PC, POP
 
+	; compute square root of a number
+	; A - input number (16-bit integer)
+	; returns the result (integer) in A
+	; author: Mrrl (on the 0x10cforum.com)
+	:sqrt
+	SET B, 1
+	SET I, A
+	IFG 0x100, A
+	ADD PC, 2
+	SHR A, 8
+	SET B, 0x10
+	IFG 0x10, A
+	ADD PC, 2
+	SHR A, 4
+	SHL B, 2
+	ADD A, 4
+	MUL B, A
+	SHR B, 2
+	SET A, I
+	DIV A, B
+	ADD B, A
+	SHR B, 1
+	SET A, I
+	DIV A, B
+	ADD B, A
+	SHR B, 1
+	SET A, I
+	DIV A, B
+	ADD A, B
+	SHR A, 1
+	SET B, A
+	MUL B, A
+	IFG B, I
+	SUB A, 1
+	SET PC, POP
+
 	; get a pseudo-random number
 	; returns the number in A
-	; Author of this code: Entroper (github.com/Entroper)
+	; author: Entroper (github.com/Entroper)
 	:rand
 	SET B, [rnd1]
 	SET A, [rnd2]
