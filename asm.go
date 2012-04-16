@@ -264,7 +264,7 @@ func Poke() {
 
 func PutChar() {
 	SkipWhite()
-	if (Look == '"') {
+	if Look == '"' {
 		GetChar()
 		EmitLine(fmt.Sprintf("SET [0x8000+X], %d", Look))
 		GetChar()
@@ -281,6 +281,16 @@ func PutChar() {
 	EmitLine("AND X, 0x1ff")
 }
 
+func Font() {
+	SkipWhite()
+	if Look == '"' {
+		Next()
+		LoadFont(Value)
+		Token = '$'
+		Next()
+	}
+}
+
 func Goto() {
 	Next()
 	Token = '$'
@@ -290,6 +300,53 @@ func Goto() {
 
 func Input() {
 	Call("input")
+}
+
+func LoadFont(filename string) {
+	var error error
+	var file *os.File
+	var charCode = 0
+	var charLine uint8 = 0
+	var charWord1 uint32 = 0
+	var charWord2 uint32 = 0
+
+	EmitLine(fmt.Sprintf("; loading font: %s", filename))
+	file, error = os.Open(filename)
+	if error != nil {
+		Error(fmt.Sprintf("Couldn't open '%s' font file!", filename))
+		return
+	}
+	reader := bufio.NewReader(file)
+	for {
+		line, _, error := reader.ReadLine()
+		if error != nil {
+			break
+		}
+		if len(line) < 4 {
+			charCode, _ = strconv.Atoi(string(line))
+			charWord1 = 0
+			charWord2 = 0
+			charLine = 0
+		} else {
+			if line[0] == 'O' {
+				charWord1 = charWord1 | (1 << (charLine + 8))
+			}
+			if line[1] == 'O' {
+				charWord1 = charWord1 | (1 << charLine)
+			}
+			if line[2] == 'O' {
+				charWord2 = charWord2 | (1 << (charLine + 8))
+			}
+			if line[3] == 'O' {
+				charWord2 = charWord2 | (1 << charLine)
+			}
+			charLine++
+			if (charLine == 8) {
+				EmitLine(fmt.Sprintf("SET [%#x], %#x", 0x8180 + charCode * 2, charWord1))
+				EmitLine(fmt.Sprintf("SET [%#x], %#x", 0x8181 + charCode * 2, charWord2))
+			}
+		}
+	}
 }
 
 func Lib() {

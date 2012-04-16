@@ -9,10 +9,11 @@ Compiler structure and engine is heavily inspired by [Let's Build a Compiler, by
 * Boolean operators: & ~ !
 * Bit shifts: << >>
 * Relational operators: == <> < > <= >=
+* Loading custom fonts
 * Control structures: IF, LOOP
 * Variables (both integer and string)
-* Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT, POKE, GOTO, RND
-* Functions: STR, CHR, VAL, PEEK, SQR
+* Statements: CLS, LOCATE, PRINT, COLOR, KEY, INPUT, POKE, GOTO, RND, FONT
+* Functions: STR, CHR, VAL, LEN, PEEK, SQR
 
 ## How the language looks like
 
@@ -177,6 +178,17 @@ Number = VAL(expression)
 
 Returns an integer representation of a number in string variable (e.g. input from user)
 
+### LEN
+
+Usage:
+
+```
+DIM Length
+Length = LEN(expression)
+```
+
+Returns length (how many letters) of a string.
+
 ### INPUT
 
 Usage:
@@ -249,6 +261,18 @@ Result = SQR(expression)
 ```
 
 Computes square root of _expression_.
+
+### FONT
+
+Usage:
+
+```
+FONT "file.txt"
+```
+
+Loads custom font from text file and replaces current terminal font with it. Font file can specify only selected characters.  
+For a sample font file please refer to _fonts/box.txt_ file. Every letter in font file starts with letter ascii code, and then 8 lines 4 character each follow,
+where dot (.) is an empty space and capital o (O) is a solid "pixel".
 
 ### END
 

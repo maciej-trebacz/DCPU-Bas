@@ -1,3 +1,172 @@
+	ADD PC, 3
+	:rnd1
+	DAT 0x6769
+	:rnd2
+	DAT 0x1250
+	:timer
+	DAT 0
+	SET PUSH, X
+	SET PUSH, Y
+	SET PUSH, Z
+	SET PUSH, I
+	SET PUSH, J
+	SET A, SP
+	SET PUSH, A
+	SET Y, 0x7000
+	SET Z, 0x9000
+	SUB SP, 3 ; Alloc space on stack
+	ADD PC, 20
+	:c0 DAT "Hello from 0xBASIC!", 0
+	SET A, c0
+	BOR A, 0x8000
+	SET [0xfffe], A
+	SET A, 0x20
+	SET [0xfffd], A
+	SET A, 0x0
+	SET [0xffff], A
+	SET A, 0xe
+	SET Y, 0
+	SHL A, 12
+	BOR Y, A
+	SET A, 0x0
+	SHL A, 8
+	BOR Y, A
+	; loading font: fonts/box.txt
+	SET [0x818c], 0x1710
+	SET [0x818d], 0x1f00
+	SET [0x818e], 0xf404
+	SET [0x818f], 0xfc00
+	SET [0x819e], 0xff00
+	SET [0x819f], 0xff00
+	SET A, 0x9
+	SET [0x8000+X], A
+	BOR [0x8000+X], Y
+	ADD X, 1
+	AND X, 0x1ff
+	:l0
+	SET A, [0xffff]
+	SET PUSH, A
+	SET A, 0x1e
+	SET B, POP
+	SET C, 1
+	IFG A, B
+	SET C, 0
+	IFN C, 0
+	SET PC, l1
+	SET A, 0xd
+	SET [0x8000+X], A
+	BOR [0x8000+X], Y
+	ADD X, 1
+	AND X, 0x1ff
+	SET A, [0xffff]
+	SET PUSH, A
+	SET A, 0x1
+	ADD A, POP
+	SET [0xffff], A
+	SET PC, l0
+	:l1
+	SET A, 0x7
+	SET [0x8000+X], A
+	BOR [0x8000+X], Y
+	ADD X, 1
+	AND X, 0x1ff
+	SET A, 0xf
+	SET [0x8000+X], A
+	BOR [0x8000+X], Y
+	ADD X, 1
+	AND X, 0x1ff
+	SET A, 0x2
+	SUB A, 1
+	SET PUSH, 0x20
+	MUL A, POP
+	SET X, A
+	SET A, 0x20
+	SUB A, 1
+	ADD X, A
+	SET A, 0xf
+	SET [0x8000+X], A
+	BOR [0x8000+X], Y
+	ADD X, 1
+	AND X, 0x1ff
+	SET A, 0x0
+	SET [0xffff], A
+	SET A, 0x8
+	SET [0x8000+X], A
+	BOR [0x8000+X], Y
+	ADD X, 1
+	AND X, 0x1ff
+	:l2
+	SET A, [0xffff]
+	SET PUSH, A
+	SET A, 0x1e
+	SET B, POP
+	SET C, 1
+	IFG A, B
+	SET C, 0
+	IFN C, 0
+	SET PC, l3
+	SET A, 0xd
+	SET [0x8000+X], A
+	BOR [0x8000+X], Y
+	ADD X, 1
+	AND X, 0x1ff
+	SET A, [0xffff]
+	SET PUSH, A
+	SET A, 0x1
+	ADD A, POP
+	SET [0xffff], A
+	SET PC, l2
+	:l3
+	SET A, 0x6
+	SET [0x8000+X], A
+	BOR [0x8000+X], Y
+	ADD X, 1
+	AND X, 0x1ff
+	SET A, 0x2
+	SUB A, 1
+	SET PUSH, 0x20
+	MUL A, POP
+	SET X, A
+	SET A, [0xfffd]
+	SET PUSH, A
+	SET A, 0x2
+	SET B, POP
+	DIV B, A
+	SET A, B
+	SET PUSH, A
+	SET A, [0xfffe]
+	JSR strlen
+	SET PUSH, A
+	SET A, 0x2
+	SET B, POP
+	DIV B, A
+	SET A, B
+	SUB A, POP
+	SET PUSH, A
+	SET A, 0
+	SUB A, POP
+	SUB A, 1
+	ADD X, A
+	SET A, 0xf
+	SET Y, 0
+	SHL A, 12
+	BOR Y, A
+	SET A, 0x0
+	SHL A, 8
+	BOR Y, A
+	SET A, [0xfffe]
+	JSR print
+	JSR printnl
+	SET J, POP
+	SET I, POP
+	SET Z, POP
+	SET Y, POP
+	SET X, POP
+	SET A, POP
+	SET SP, A
+	SET PC, end
+	
+	; lib.dasm - compiler library
 	; get key press
 	; also increments timer (for randomization)
 	; uses Z register as pointer to keyboard buffer

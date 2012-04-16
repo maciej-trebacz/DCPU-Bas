@@ -57,3 +57,9 @@ func FuncSqr() {
 	Call("sqrt")
 }
 
+func FuncLen() {
+	Next()
+	MatchString("(")
+	BoolExpression()
+	Call("strlen")
+}
